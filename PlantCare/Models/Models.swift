@@ -194,6 +194,7 @@ struct CompletedCareStep: Identifiable, Codable {
 struct AppSettings: Codable {
     var earlyWarningDays: Int = 2
     var customRoomOrder: [UUID] = []
+    var openAIAPIKey: String = ""
     
     init() {}
 }

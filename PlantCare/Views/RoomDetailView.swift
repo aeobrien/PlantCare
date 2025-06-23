@@ -7,6 +7,8 @@ struct RoomDetailView: View {
     @State private var showingAddWindow = false
     @State private var newWindowDirection = Direction.north
     @State private var newWindowNotes = ""
+    @State private var showingMoveSheet = false
+    @State private var plantToMove: Plant?
     
     var plantsInRoom: [Plant] {
         dataStore.plantsInRoom(room)
@@ -61,11 +63,31 @@ struct RoomDetailView: View {
                             .background(Color(.systemGray6))
                             .cornerRadius(8)
                     } else {
-                        ForEach(plantsInRoom) { plant in
-                            NavigationLink(destination: PlantDetailView(plant: plant)) {
-                                PlantRow(plant: plant)
+                        List {
+                            ForEach(plantsInRoom) { plant in
+                                NavigationLink(destination: PlantDetailView(plantID: plant.id)) {
+                                    PlantRowContent(plant: plant)
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        deletePlant(plant)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        plantToMove = plant
+                                        showingMoveSheet = true
+                                    } label: {
+                                        Label("Move", systemImage: "arrow.up.arrow.down")
+                                    }
+                                    .tint(.blue)
+                                }
                             }
                         }
+                        .listStyle(.plain)
+                        .frame(height: CGFloat(plantsInRoom.count) * 100)
                     }
                 }
             }
@@ -85,6 +107,17 @@ struct RoomDetailView: View {
         }
         .sheet(isPresented: $showingAddWindow) {
             AddWindowSheet(room: $room)
+        }
+        .sheet(isPresented: $showingMoveSheet) {
+            if let plant = plantToMove {
+                MovePlantSheet(plant: plant)
+            }
+        }
+    }
+    
+    func deletePlant(_ plant: Plant) {
+        if let index = dataStore.plants.firstIndex(where: { $0.id == plant.id }) {
+            dataStore.deletePlant(at: IndexSet(integer: index))
         }
     }
 }
@@ -195,6 +228,52 @@ struct PlantRow: View {
     }
 }
 
+struct PlantRowContent: View {
+    let plant: Plant
+    @EnvironmentObject var dataStore: DataStore
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(plant.name)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                HStack(spacing: 4) {
+                    Image(systemName: "sun.max")
+                        .font(.caption2)
+                    Text(plant.lightType.rawValue)
+                        .font(.caption)
+                    if let window = dataStore.windowForPlant(plant) {
+                        Text("• \(window.direction.rawValue)")
+                            .font(.caption)
+                    }
+                }
+                .foregroundColor(.secondary)
+            }
+            Spacer()
+            if let wateringStep = plant.wateringStep,
+               let lastCompleted = wateringStep.lastCompletedDate {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Watered")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text(lastCompleted, style: .relative)
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+            } else if plant.hasAnyOverdueCareSteps {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Care needed")
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .fontWeight(.medium)
+                }
+            }
+        }
+        .padding(.vertical, 8)
+    }
+}
+
 struct EditRoomView: View {
     @Binding var room: Room
     @EnvironmentObject var dataStore: DataStore
@@ -302,6 +381,104 @@ struct AddWindowSheet: View {
         )
         room.windows.append(newWindow)
         dataStore.updateRoom(room)
+        dismiss()
+    }
+}
+
+struct MovePlantSheet: View {
+    let plant: Plant
+    @EnvironmentObject var dataStore: DataStore
+    @Environment(\.dismiss) var dismiss
+    @State private var selectedRoomID: UUID?
+    @State private var selectedWindowID: UUID?
+    
+    var selectedRoom: Room? {
+        guard let roomID = selectedRoomID else { return nil }
+        return dataStore.rooms.first { $0.id == roomID }
+    }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Move \(plant.name) to:")) {
+                    Picker("Room", selection: $selectedRoomID) {
+                        Text("None").tag(nil as UUID?)
+                        ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
+                            HStack {
+                                Text(room.name)
+                                if room.id == plant.assignedRoomID {
+                                    Text("(current)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .tag(room.id as UUID?)
+                        }
+                    }
+                    
+                    if let room = selectedRoom, !room.windows.isEmpty {
+                        Picker("Window", selection: $selectedWindowID) {
+                            Text("None").tag(nil as UUID?)
+                            ForEach(room.windows) { window in
+                                HStack {
+                                    Text(window.direction.rawValue)
+                                    if window.id == plant.assignedWindowID {
+                                        Text("(current)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .tag(window.id as UUID?)
+                            }
+                        }
+                    }
+                }
+                
+                if let room = selectedRoom {
+                    Section(header: Text("Room Info")) {
+                        HStack {
+                            Text("Windows")
+                            Spacer()
+                            Text("\(room.windows.count)")
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack {
+                            Text("Current Plants")
+                            Spacer()
+                            Text("\(dataStore.plantsInRoom(room).count)")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Move Plant")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Move") {
+                        movePlant()
+                    }
+                    .disabled(selectedRoomID == plant.assignedRoomID && selectedWindowID == plant.assignedWindowID)
+                }
+            }
+            .onAppear {
+                selectedRoomID = plant.assignedRoomID
+                selectedWindowID = plant.assignedWindowID
+            }
+        }
+    }
+    
+    func movePlant() {
+        var updatedPlant = plant
+        updatedPlant.assignedRoomID = selectedRoomID
+        updatedPlant.assignedWindowID = selectedWindowID
+        dataStore.updatePlant(updatedPlant)
         dismiss()
     }
 }

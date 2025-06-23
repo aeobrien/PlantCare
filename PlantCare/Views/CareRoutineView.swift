@@ -230,6 +230,7 @@ struct PlantCareSection: View {
     let completedCareSteps: Set<String>
     let onToggleCareStep: (CareStep) -> Void
     @EnvironmentObject var dataStore: DataStore
+    @State private var showingAIQuestion = false
     
     var window: Window? {
         dataStore.windowForPlant(plant)
@@ -241,7 +242,7 @@ struct PlantCareSection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            PlantHeader(plant: plant, window: window)
+            PlantHeader(plant: plant, window: window, showingAIQuestion: $showingAIQuestion)
             
             VStack(spacing: 8) {
                 ForEach(plant.enabledCareSteps) { careStep in
@@ -265,12 +266,17 @@ struct PlantCareSection: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(.systemGray6))
         )
+        .sheet(isPresented: $showingAIQuestion) {
+            AIPlantQuestionView(plant: plant)
+                .environmentObject(dataStore)
+        }
     }
 }
 
 struct PlantHeader: View {
     let plant: Plant
     let window: Window?
+    @Binding var showingAIQuestion: Bool
     
     var body: some View {
         HStack {
@@ -288,10 +294,20 @@ struct PlantHeader: View {
             
             Spacer()
             
-            if plant.hasAnyOverdueCareSteps {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.orange)
-                    .font(.title2)
+            HStack(spacing: 12) {
+                if plant.hasAnyOverdueCareSteps {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                        .font(.title3)
+                }
+                
+                Button(action: {
+                    showingAIQuestion = true
+                }) {
+                    Image(systemName: "sparkles")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                }
             }
         }
     }

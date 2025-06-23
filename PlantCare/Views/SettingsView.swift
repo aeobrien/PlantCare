@@ -12,6 +12,34 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section(header: Text("API Settings")) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("OpenAI API Key")
+                            .font(.subheadline)
+                        
+                        Text("Required for AI-powered plant recommendations")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        SecureField("Enter your API key", text: $settings.openAIAPIKey)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                        
+                        if !settings.openAIAPIKey.isEmpty {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                                Text("API key saved")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                
                 Section(header: Text("Warning Settings")) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Early completion warning")
@@ -72,6 +100,9 @@ struct SettingsView: View {
                 loadCurrentSettings()
             }
             .onChange(of: settings.earlyWarningDays) { _ in
+                saveSettings()
+            }
+            .onChange(of: settings.openAIAPIKey) { _ in
                 saveSettings()
             }
         }

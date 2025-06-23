@@ -2,22 +2,30 @@ import SwiftUI
 
 struct PlantDetailView: View {
     @EnvironmentObject var dataStore: DataStore
-    @State var plant: Plant
+    let plantID: UUID
     @State private var isEditing = false
+    @State private var showingAIQuestion = false
+    
+    var plant: Plant? {
+        dataStore.plants.first { $0.id == plantID }
+    }
     
     var room: Room? {
-        dataStore.roomForPlant(plant)
+        guard let plant = plant else { return nil }
+        return dataStore.roomForPlant(plant)
     }
     
     var window: Window? {
-        dataStore.windowForPlant(plant)
+        guard let plant = plant else { return nil }
+        return dataStore.windowForPlant(plant)
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 16) {
-                    SectionHeader(title: "Location & Light")
+        if let plant = plant {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        SectionHeader(title: "Location & Light")
                     
                     VStack(spacing: 12) {
                         InfoRow(
@@ -136,28 +144,44 @@ struct PlantDetailView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
+                HStack {
                     Button(action: {
-                        isEditing = true
+                        showingAIQuestion = true
                     }) {
-                        Label("Edit", systemImage: "pencil")
+                        Image(systemName: "sparkles")
                     }
                     
-                    Button(action: duplicatePlant) {
-                        Label("Duplicate", systemImage: "doc.on.doc")
+                    Menu {
+                        Button(action: {
+                            isEditing = true
+                        }) {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        
+                        Button(action: duplicatePlant) {
+                            Label("Duplicate", systemImage: "doc.on.doc")
+                        }
+                    } label: {
+                        Text("Edit")
                     }
-                } label: {
-                    Text("Edit")
                 }
             }
         }
         .sheet(isPresented: $isEditing) {
-            EditPlantView(plant: $plant)
+            EditPlantViewWrapper(plantID: plant.id)
+                .environmentObject(dataStore)
+        }
+        .sheet(isPresented: $showingAIQuestion) {
+            AIPlantQuestionView(plant: plant)
+                .environmentObject(dataStore)
+        }
+        } else {
+            ContentUnavailableView("Plant Not Found", systemImage: "leaf")
         }
     }
     
     var lightIcon: String {
-        switch plant.lightType {
+        switch plant?.lightType ?? .indirect {
         case .direct:
             return "sun.max.fill"
         case .indirect:
@@ -168,6 +192,7 @@ struct PlantDetailView: View {
     }
     
     func markWateringStepCompleted() {
+        guard var plant = plant else { return }
         if let wateringStep = plant.wateringStep {
             plant.markCareStepCompleted(withId: wateringStep.id)
             dataStore.updatePlant(plant)
@@ -175,6 +200,7 @@ struct PlantDetailView: View {
     }
     
     func duplicatePlant() {
+        guard let plant = plant else { return }
         var newPlant = plant
         newPlant.id = UUID()
         newPlant.name = "\(plant.name) (Copy)"
@@ -347,6 +373,17 @@ struct EditPlantView: View {
                         Text("None").tag(nil as UUID?)
                         ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
                             Text(room.name).tag(room.id as UUID?)
+                        }
+                    }
+                    .onChange(of: selectedRoomID) { newRoomID in
+                        // Auto-select window if room has only one
+                        if let roomID = newRoomID,
+                           let room = dataStore.rooms.first(where: { $0.id == roomID }),
+                           room.windows.count == 1,
+                           let window = room.windows.first {
+                            selectedWindowID = window.id
+                        } else if newRoomID == nil {
+                            selectedWindowID = nil
                         }
                     }
                     
@@ -658,9 +695,31 @@ struct EditCareStepView: View {
     }
 }
 
+struct EditPlantViewWrapper: View {
+    let plantID: UUID
+    @EnvironmentObject var dataStore: DataStore
+    
+    var body: some View {
+        if let index = dataStore.plants.firstIndex(where: { $0.id == plantID }) {
+            EditPlantView(plant: Binding(
+                get: { dataStore.plants[index] },
+                set: { newValue in
+                    dataStore.plants[index] = newValue
+                    dataStore.saveData()
+                }
+            ))
+            .environmentObject(dataStore)
+        } else {
+            ContentUnavailableView("Plant Not Found", systemImage: "leaf")
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
-        PlantDetailView(plant: DataStore.shared.plants.first!)
-            .environmentObject(DataStore.shared)
+        if let firstPlant = DataStore.shared.plants.first {
+            PlantDetailView(plantID: firstPlant.id)
+                .environmentObject(DataStore.shared)
+        }
     }
 }

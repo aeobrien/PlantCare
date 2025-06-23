@@ -4,6 +4,7 @@ struct PlantsListView: View {
     @EnvironmentObject var dataStore: DataStore
     @State private var showingAddPlant = false
     @State private var showingImport = false
+    @State private var showingAIAdd = false
     @State private var searchText = ""
     
     var filteredPlants: [Plant] {
@@ -19,7 +20,7 @@ struct PlantsListView: View {
     var body: some View {
         List {
             ForEach(filteredPlants) { plant in
-                NavigationLink(destination: PlantDetailView(plant: plant)) {
+                NavigationLink(destination: PlantDetailView(plantID: plant.id)) {
                     PlantListRow(plant: plant)
                 }
                 .swipeActions(edge: .leading) {
@@ -50,6 +51,12 @@ struct PlantsListView: View {
                     }) {
                         Label("Import from Clipboard", systemImage: "doc.on.clipboard")
                     }
+                    
+                    Button(action: {
+                        showingAIAdd = true
+                    }) {
+                        Label("Add via AI", systemImage: "sparkles")
+                    }
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -60,6 +67,9 @@ struct PlantsListView: View {
         }
         .sheet(isPresented: $showingImport) {
             ImportPlantsView()
+        }
+        .sheet(isPresented: $showingAIAdd) {
+            AIPlantAddView()
         }
     }
     
@@ -199,6 +209,17 @@ struct AddPlantView: View {
                         Text("None").tag(nil as UUID?)
                         ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
                             Text(room.name).tag(room.id as UUID?)
+                        }
+                    }
+                    .onChange(of: selectedRoomID) { newRoomID in
+                        // Auto-select window if room has only one
+                        if let roomID = newRoomID,
+                           let room = dataStore.rooms.first(where: { $0.id == roomID }),
+                           room.windows.count == 1,
+                           let window = room.windows.first {
+                            selectedWindowID = window.id
+                        } else if newRoomID == nil {
+                            selectedWindowID = nil
                         }
                     }
                     

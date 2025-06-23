@@ -167,14 +167,22 @@ struct PlantRow: View {
                 .foregroundColor(.secondary)
             }
             Spacer()
-            if let lastWatered = plant.lastWateredDate {
+            if let wateringStep = plant.wateringStep,
+               let lastCompleted = wateringStep.lastCompletedDate {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("Watered")
                         .font(.caption2)
                         .foregroundColor(.secondary)
-                    Text(lastWatered, style: .relative)
+                    Text(lastCompleted, style: .relative)
                         .font(.caption)
                         .foregroundColor(.blue)
+                }
+            } else if plant.hasAnyOverdueCareSteps {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Care needed")
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .fontWeight(.medium)
                 }
             }
             Image(systemName: "chevron.right")

@@ -50,60 +50,39 @@ struct PlantDetailView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 16) {
-                    SectionHeader(title: "Watering")
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(plant.wateringInstructions)
-                            .font(.body)
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                        
-                        if let frequency = plant.wateringFrequencyDays {
-                            InfoRow(
-                                icon: "drop",
-                                label: "Frequency",
-                                value: "Every \(frequency) days"
-                            )
+                    HStack {
+                        SectionHeader(title: "Care Steps")
+                        Spacer()
+                        Button(action: {
+                            isEditing = true
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
                         }
-                        
-                        if let lastWatered = plant.lastWateredDate {
-                            InfoRow(
-                                icon: "calendar",
-                                label: "Last Watered",
-                                value: lastWatered.formatted(date: .abbreviated, time: .omitted)
-                            )
+                    }
+                    
+                    if plant.careSteps.isEmpty {
+                        VStack(spacing: 12) {
+                            Image(systemName: "leaf.circle")
+                                .font(.system(size: 40))
+                                .foregroundColor(.secondary)
                             
-                            if let frequency = plant.wateringFrequencyDays {
-                                let nextWatering = lastWatered.addingTimeInterval(Double(frequency) * 24 * 60 * 60)
-                                let daysUntilWatering = Calendar.current.dateComponents([.day], from: Date(), to: nextWatering).day ?? 0
-                                
-                                HStack {
-                                    Image(systemName: "clock")
-                                        .foregroundColor(.blue)
-                                        .frame(width: 20)
-                                    Text("Next Watering")
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                    if daysUntilWatering <= 0 {
-                                        Text("Due today")
-                                            .foregroundColor(.blue)
-                                            .fontWeight(.medium)
-                                    } else if daysUntilWatering == 1 {
-                                        Text("Tomorrow")
-                                            .foregroundColor(.orange)
-                                    } else {
-                                        Text("In \(daysUntilWatering) days")
-                                    }
-                                }
-                                .padding()
-                                .background(
-                                    daysUntilWatering <= 0 ? 
-                                    Color.blue.opacity(0.1) : 
-                                    Color(.systemGray6)
-                                )
-                                .cornerRadius(8)
+                            Text("No care steps configured")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Text("Tap the + button to add care steps")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                    } else {
+                        VStack(spacing: 8) {
+                            ForEach(plant.careSteps) { careStep in
+                                CareStepDetailCard(careStep: careStep)
                             }
                         }
                     }
@@ -118,14 +97,6 @@ struct PlantDetailView: View {
                             label: "Humidity",
                             value: humidity.rawValue
                         )
-                        
-                        if let rotation = plant.rotationFrequency {
-                            InfoRow(
-                                icon: "arrow.clockwise",
-                                label: "Rotation",
-                                value: rotation
-                            )
-                        }
                     }
                 }
                 
@@ -142,20 +113,22 @@ struct PlantDetailView: View {
                     }
                 }
                 
-                Button(action: {
-                    markAsWatered()
-                }) {
-                    HStack {
-                        Image(systemName: "drop.fill")
-                        Text("Mark as Watered")
+                if let wateringStep = plant.wateringStep {
+                    Button(action: {
+                        markWateringStepCompleted()
+                    }) {
+                        HStack {
+                            Image(systemName: "drop.fill")
+                            Text("Mark as Watered")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+                    .padding(.top)
                 }
-                .padding(.top)
             }
             .padding()
         }
@@ -194,16 +167,21 @@ struct PlantDetailView: View {
         }
     }
     
-    func markAsWatered() {
-        plant.lastWateredDate = Date()
-        dataStore.updatePlant(plant)
+    func markWateringStepCompleted() {
+        if let wateringStep = plant.wateringStep {
+            plant.markCareStepCompleted(withId: wateringStep.id)
+            dataStore.updatePlant(plant)
+        }
     }
     
     func duplicatePlant() {
         var newPlant = plant
         newPlant.id = UUID()
         newPlant.name = "\(plant.name) (Copy)"
-        newPlant.lastWateredDate = nil
+        // Reset last completed dates for all care steps
+        for i in 0..<newPlant.careSteps.count {
+            newPlant.careSteps[i].lastCompletedDate = nil
+        }
         dataStore.addPlant(newPlant)
     }
 }
@@ -241,6 +219,90 @@ struct InfoRow: View {
     }
 }
 
+struct CareStepDetailCard: View {
+    let careStep: CareStep
+    
+    var statusText: String {
+        if careStep.isOverdue {
+            if let daysSince = careStep.daysSinceLastCompleted {
+                return "Overdue by \(daysSince - careStep.frequencyDays) days"
+            }
+            return "Overdue"
+        } else if let daysUntil = careStep.daysUntilDue {
+            if daysUntil == 0 {
+                return "Due today"
+            } else if daysUntil == 1 {
+                return "Due tomorrow"
+            } else {
+                return "Due in \(daysUntil) days"
+            }
+        }
+        return "Due today"
+    }
+    
+    var statusColor: Color {
+        if careStep.isOverdue {
+            return .red
+        } else if let daysUntil = careStep.daysUntilDue, daysUntil == 0 {
+            return .orange
+        }
+        return .secondary
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: careStep.type.systemImageName)
+                    .foregroundColor(.blue)
+                    .frame(width: 20)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(careStep.displayName)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    Text("Every \(careStep.frequencyDays) days")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(statusText)
+                        .font(.caption)
+                        .foregroundColor(statusColor)
+                        .fontWeight(.medium)
+                    
+                    if let lastCompleted = careStep.lastCompletedDate {
+                        Text("Last: \(lastCompleted.formatted(date: .abbreviated, time: .omitted))")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Never completed")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            
+            Text(careStep.instructions)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 24)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(careStep.isOverdue ? Color.red.opacity(0.1) : Color(.systemGray6))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(careStep.isOverdue ? Color.red : Color.clear, lineWidth: 1)
+        )
+    }
+}
+
 struct EditPlantView: View {
     @Binding var plant: Plant
     @EnvironmentObject var dataStore: DataStore
@@ -251,11 +313,10 @@ struct EditPlantView: View {
     @State private var selectedWindowID: UUID?
     @State private var preferredLightDirection: Direction = .east
     @State private var lightType: LightType = .indirect
-    @State private var wateringInstructions: String = ""
     @State private var generalNotes: String = ""
-    @State private var wateringFrequencyDays: Int = 7
     @State private var humidityPreference: HumidityPreference = .medium
-    @State private var rotationFrequency: String = ""
+    @State private var careSteps: [CareStep] = []
+    @State private var showingAddCareStep = false
     
     var selectedRoom: Room? {
         guard let roomID = selectedRoomID else { return nil }
@@ -299,33 +360,42 @@ struct EditPlantView: View {
                     }
                 }
                 
-                Section(header: Text("Care Instructions")) {
-                    VStack(alignment: .leading) {
-                        Text("Watering Instructions")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        TextEditor(text: $wateringInstructions)
-                            .frame(height: 60)
-                    }
-                    
+                Section(header: 
                     HStack {
-                        Text("Watering Frequency")
+                        Text("Care Steps")
                         Spacer()
-                        Picker("", selection: $wateringFrequencyDays) {
-                            ForEach([3, 5, 7, 10, 14, 21, 30], id: \.self) { days in
-                                Text("\(days) days").tag(days)
-                            }
+                        Button(action: { showingAddCareStep = true }) {
+                            Image(systemName: "plus")
                         }
-                        .pickerStyle(MenuPickerStyle())
                     }
-                    
+                ) {
+                    if careSteps.isEmpty {
+                        Text("No care steps configured")
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                    } else {
+                        ForEach(careSteps) { careStep in
+                            CareStepEditRow(
+                                careStep: careStep,
+                                onEdit: { editedStep in
+                                    if let index = careSteps.firstIndex(where: { $0.id == editedStep.id }) {
+                                        careSteps[index] = editedStep
+                                    }
+                                },
+                                onDelete: {
+                                    careSteps.removeAll { $0.id == careStep.id }
+                                }
+                            )
+                        }
+                    }
+                }
+                
+                Section(header: Text("Environment")) {
                     Picker("Humidity Preference", selection: $humidityPreference) {
                         ForEach(HumidityPreference.allCases, id: \.self) { pref in
                             Text(pref.rawValue).tag(pref)
                         }
                     }
-                    
-                    TextField("Rotation Frequency (optional)", text: $rotationFrequency)
                 }
                 
                 Section(header: Text("General Notes")) {
@@ -347,17 +417,20 @@ struct EditPlantView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showingAddCareStep) {
+                AddCareStepView { newStep in
+                    careSteps.append(newStep)
+                }
+            }
             .onAppear {
                 plantName = plant.name
                 selectedRoomID = plant.assignedRoomID
                 selectedWindowID = plant.assignedWindowID
                 preferredLightDirection = plant.preferredLightDirection
                 lightType = plant.lightType
-                wateringInstructions = plant.wateringInstructions
                 generalNotes = plant.generalNotes
-                wateringFrequencyDays = plant.wateringFrequencyDays ?? 7
                 humidityPreference = plant.humidityPreference ?? .medium
-                rotationFrequency = plant.rotationFrequency ?? ""
+                careSteps = plant.careSteps
             }
         }
     }
@@ -368,14 +441,220 @@ struct EditPlantView: View {
         plant.assignedWindowID = selectedWindowID
         plant.preferredLightDirection = preferredLightDirection
         plant.lightType = lightType
-        plant.wateringInstructions = wateringInstructions
         plant.generalNotes = generalNotes
-        plant.wateringFrequencyDays = wateringFrequencyDays
         plant.humidityPreference = humidityPreference
-        plant.rotationFrequency = rotationFrequency.isEmpty ? nil : rotationFrequency
+        plant.careSteps = careSteps
         
         dataStore.updatePlant(plant)
         dismiss()
+    }
+}
+
+struct CareStepEditRow: View {
+    let careStep: CareStep
+    let onEdit: (CareStep) -> Void
+    let onDelete: () -> Void
+    @State private var showingEditSheet = false
+    
+    var body: some View {
+        HStack {
+            Image(systemName: careStep.type.systemImageName)
+                .foregroundColor(.blue)
+                .frame(width: 20)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(careStep.displayName)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text("Every \(careStep.frequencyDays) days")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Button("Edit") {
+                showingEditSheet = true
+            }
+            .font(.caption)
+        }
+        .contentShape(Rectangle())
+        .sheet(isPresented: $showingEditSheet) {
+            EditCareStepView(careStep: careStep) { editedStep in
+                onEdit(editedStep)
+            }
+        }
+        .swipeActions(edge: .trailing) {
+            Button("Delete", role: .destructive) {
+                onDelete()
+            }
+        }
+    }
+}
+
+struct AddCareStepView: View {
+    let onAdd: (CareStep) -> Void
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var selectedType: CareStepType = .watering
+    @State private var customName = ""
+    @State private var instructions = ""
+    @State private var frequencyDays = 7
+    
+    var displayName: String {
+        if selectedType == .custom && !customName.isEmpty {
+            return customName
+        }
+        return selectedType.rawValue
+    }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Care Step Type")) {
+                    Picker("Type", selection: $selectedType) {
+                        ForEach(CareStepType.allCases, id: \.self) { type in
+                            HStack {
+                                Image(systemName: type.systemImageName)
+                                Text(type.rawValue)
+                            }
+                            .tag(type)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    
+                    if selectedType == .custom {
+                        TextField("Custom name", text: $customName)
+                    }
+                }
+                
+                Section(header: Text("Instructions")) {
+                    TextEditor(text: $instructions)
+                        .frame(height: 80)
+                }
+                
+                Section(header: Text("Frequency")) {
+                    HStack {
+                        Text("Every")
+                        Picker("Days", selection: $frequencyDays) {
+                            ForEach([1, 2, 3, 5, 7, 10, 14, 21, 30], id: \.self) { days in
+                                Text("\(days)").tag(days)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(width: 80)
+                        Text("days")
+                    }
+                }
+            }
+            .navigationTitle("Add Care Step")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add") {
+                        let careStep = CareStep(
+                            type: selectedType,
+                            customName: selectedType == .custom ? customName : nil,
+                            instructions: instructions,
+                            frequencyDays: frequencyDays
+                        )
+                        onAdd(careStep)
+                        dismiss()
+                    }
+                    .disabled(instructions.isEmpty || (selectedType == .custom && customName.isEmpty))
+                }
+            }
+        }
+    }
+}
+
+struct EditCareStepView: View {
+    @State private var careStep: CareStep
+    let onSave: (CareStep) -> Void
+    @Environment(\.dismiss) var dismiss
+    
+    init(careStep: CareStep, onSave: @escaping (CareStep) -> Void) {
+        self._careStep = State(initialValue: careStep)
+        self.onSave = onSave
+    }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Care Step Type")) {
+                    Picker("Type", selection: $careStep.type) {
+                        ForEach(CareStepType.allCases, id: \.self) { type in
+                            HStack {
+                                Image(systemName: type.systemImageName)
+                                Text(type.rawValue)
+                            }
+                            .tag(type)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    
+                    if careStep.type == .custom {
+                        TextField("Custom name", text: Binding(
+                            get: { careStep.customName ?? "" },
+                            set: { careStep.customName = $0 }
+                        ))
+                    }
+                }
+                
+                Section(header: Text("Instructions")) {
+                    TextEditor(text: $careStep.instructions)
+                        .frame(height: 80)
+                }
+                
+                Section(header: Text("Frequency")) {
+                    HStack {
+                        Text("Every")
+                        Picker("Days", selection: $careStep.frequencyDays) {
+                            ForEach([1, 2, 3, 5, 7, 10, 14, 21, 30], id: \.self) { days in
+                                Text("\(days)").tag(days)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(width: 80)
+                        Text("days")
+                    }
+                }
+                
+                Section(header: Text("Status")) {
+                    Toggle("Enabled", isOn: $careStep.isEnabled)
+                    
+                    if let lastCompleted = careStep.lastCompletedDate {
+                        HStack {
+                            Text("Last Completed")
+                            Spacer()
+                            Text(lastCompleted.formatted(date: .abbreviated, time: .omitted))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Edit Care Step")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        onSave(careStep)
+                        dismiss()
+                    }
+                    .disabled(careStep.instructions.isEmpty || (careStep.type == .custom && (careStep.customName?.isEmpty ?? true)))
+                }
+            }
+        }
     }
 }
 

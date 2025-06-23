@@ -4,13 +4,11 @@ struct CareRoutineView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
     @State private var currentRoomIndex = 0
-    @State private var completedPlantIDs: Set<UUID> = []
+    @State private var completedCareSteps: Set<String> = []
     @State private var showingCompletion = false
     
     var sortedRooms: [Room] {
-        dataStore.rooms
-            .filter { room in dataStore.plantsInRoom(room).count > 0 }
-            .sorted(by: { $0.orderIndex < $1.orderIndex })
+        dataStore.orderedRoomsForCareRoutine()
     }
     
     var currentRoom: Room? {
@@ -23,8 +21,16 @@ struct CareRoutineView: View {
         return dataStore.plantsInRoom(room)
     }
     
-    var totalPlants: Int {
-        sortedRooms.reduce(0) { $0 + dataStore.plantsInRoom($1).count }
+    var totalCareSteps: Int {
+        sortedRooms.reduce(0) { total, room in
+            total + dataStore.plantsInRoom(room).reduce(0) { plantTotal, plant in
+                plantTotal + plant.enabledCareSteps.count
+            }
+        }
+    }
+    
+    func careStepKey(plantID: UUID, careStepID: UUID) -> String {
+        return "\(plantID.uuidString)-\(careStepID.uuidString)"
     }
     
     var body: some View {
@@ -40,8 +46,8 @@ struct CareRoutineView: View {
                     }
             } else if showingCompletion {
                 CompletionView(
-                    completedCount: completedPlantIDs.count,
-                    totalCount: totalPlants
+                    completedCount: completedCareSteps.count,
+                    totalCount: totalCareSteps
                 )
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -55,8 +61,8 @@ struct CareRoutineView: View {
                     ProgressHeader(
                         currentRoom: currentRoomIndex + 1,
                         totalRooms: sortedRooms.count,
-                        completedPlants: completedPlantIDs.count,
-                        totalPlants: totalPlants
+                        completedCareSteps: completedCareSteps.count,
+                        totalCareSteps: totalCareSteps
                     )
                     
                     ScrollView {
@@ -65,10 +71,12 @@ struct CareRoutineView: View {
                             
                             VStack(spacing: 12) {
                                 ForEach(plantsInCurrentRoom) { plant in
-                                    PlantCareCard(
+                                    PlantCareSection(
                                         plant: plant,
-                                        isCompleted: completedPlantIDs.contains(plant.id),
-                                        onToggle: { togglePlant(plant) }
+                                        completedCareSteps: completedCareSteps,
+                                        onToggleCareStep: { careStep in
+                                            toggleCareStep(plant: plant, careStep: careStep)
+                                        }
                                     )
                                 }
                             }
@@ -101,12 +109,15 @@ struct CareRoutineView: View {
         }
     }
     
-    func togglePlant(_ plant: Plant) {
-        if completedPlantIDs.contains(plant.id) {
-            completedPlantIDs.remove(plant.id)
+    func toggleCareStep(plant: Plant, careStep: CareStep) {
+        let key = careStepKey(plantID: plant.id, careStepID: careStep.id)
+        
+        if completedCareSteps.contains(key) {
+            completedCareSteps.remove(key)
+            dataStore.unmarkCareStepCompleted(plantID: plant.id, careStepID: careStep.id)
         } else {
-            completedPlantIDs.insert(plant.id)
-            dataStore.markPlantAsCaredFor(plantID: plant.id)
+            completedCareSteps.insert(key)
+            dataStore.markCareStepCompleted(plantID: plant.id, careStepID: careStep.id)
         }
     }
     
@@ -163,11 +174,11 @@ struct EmptyRoutineView: View {
 struct ProgressHeader: View {
     let currentRoom: Int
     let totalRooms: Int
-    let completedPlants: Int
-    let totalPlants: Int
+    let completedCareSteps: Int
+    let totalCareSteps: Int
     
     var progress: Double {
-        totalPlants > 0 ? Double(completedPlants) / Double(totalPlants) : 0
+        totalCareSteps > 0 ? Double(completedCareSteps) / Double(totalCareSteps) : 0
     }
     
     var body: some View {
@@ -179,7 +190,7 @@ struct ProgressHeader: View {
                 
                 Spacer()
                 
-                Text("\(completedPlants) / \(totalPlants) plants")
+                Text("\(completedCareSteps) / \(totalCareSteps) care steps")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -214,66 +225,160 @@ struct RoomHeader: View {
     }
 }
 
-struct PlantCareCard: View {
+struct PlantCareSection: View {
     let plant: Plant
-    let isCompleted: Bool
-    let onToggle: () -> Void
+    let completedCareSteps: Set<String>
+    let onToggleCareStep: (CareStep) -> Void
     @EnvironmentObject var dataStore: DataStore
     
     var window: Window? {
         dataStore.windowForPlant(plant)
     }
     
+    func careStepKey(careStepID: UUID) -> String {
+        return "\(plant.id.uuidString)-\(careStepID.uuidString)"
+    }
+    
     var body: some View {
-        Button(action: onToggle) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(plant.name)
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                        
-                        if let window = window {
-                            Text("\(window.direction.rawValue) window")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
-                        .font(.title2)
-                        .foregroundColor(isCompleted ? .green : .secondary)
-                }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Label(plant.wateringInstructions, systemImage: "drop")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    if !plant.generalNotes.isEmpty {
-                        Label(plant.generalNotes, systemImage: "note.text")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .lineLimit(2)
-                    }
-                    
-                    if let rotation = plant.rotationFrequency {
-                        Label(rotation, systemImage: "arrow.clockwise")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+        VStack(alignment: .leading, spacing: 12) {
+            PlantHeader(plant: plant, window: window)
+            
+            VStack(spacing: 8) {
+                ForEach(plant.enabledCareSteps) { careStep in
+                    CareStepCard(
+                        careStep: careStep,
+                        isCompleted: completedCareSteps.contains(careStepKey(careStepID: careStep.id)),
+                        onToggle: { onToggleCareStep(careStep) }
+                    )
                 }
             }
-            .padding()
+            
+            if !plant.generalNotes.isEmpty {
+                Label(plant.generalNotes, systemImage: "note.text")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.systemGray6))
+        )
+    }
+}
+
+struct PlantHeader: View {
+    let plant: Plant
+    let window: Window?
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(plant.name)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                if let window = window {
+                    Text("\(window.direction.rawValue) window")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            Spacer()
+            
+            if plant.hasAnyOverdueCareSteps {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundColor(.orange)
+                    .font(.title2)
+            }
+        }
+    }
+}
+
+struct CareStepCard: View {
+    let careStep: CareStep
+    let isCompleted: Bool
+    let onToggle: () -> Void
+    
+    var statusText: String {
+        if isCompleted {
+            return "Completed"
+        } else if careStep.isOverdue {
+            if let daysSince = careStep.daysSinceLastCompleted {
+                return "Overdue by \(daysSince - careStep.frequencyDays) days"
+            }
+            return "Overdue"
+        } else if let daysUntil = careStep.daysUntilDue {
+            if daysUntil == 0 {
+                return "Due today"
+            } else if daysUntil == 1 {
+                return "Due tomorrow"
+            } else {
+                return "Due in \(daysUntil) days"
+            }
+        }
+        return "Due today"
+    }
+    
+    var statusColor: Color {
+        if isCompleted {
+            return .green
+        } else if careStep.isOverdue {
+            return .red
+        } else if let daysUntil = careStep.daysUntilDue {
+            if daysUntil == 0 {
+                return .orange
+            } else if daysUntil > DataStore.shared.settings.earlyWarningDays {
+                return .red // Subtle warning for early completion
+            }
+        }
+        return .secondary
+    }
+    
+    var body: some View {
+        Button(action: onToggle) {
+            HStack {
+                Image(systemName: careStep.type.systemImageName)
+                    .foregroundColor(careStep.type == .watering ? .blue : .secondary)
+                    .frame(width: 20)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack {
+                        Text(careStep.displayName)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        Text(statusText)
+                            .font(.caption)
+                            .foregroundColor(statusColor)
+                    }
+                    
+                    Text(careStep.instructions)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+                
+                Spacer()
+                
+                Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
+                    .foregroundColor(isCompleted ? .green : .secondary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isCompleted ? Color.green.opacity(0.1) : Color(.systemGray6))
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isCompleted ? Color.green.opacity(0.1) : Color(.systemBackground))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(isCompleted ? Color.green : Color.clear, lineWidth: 2)
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isCompleted ? Color.green : Color.clear, lineWidth: 1)
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -339,13 +444,13 @@ struct CompletionView: View {
     
     var message: String {
         if completedCount == totalCount {
-            return "Perfect! You've cared for all your plants!"
+            return "Perfect! You've completed all care steps!"
         } else if completedCount > totalCount / 2 {
-            return "Great job! You've cared for most of your plants."
+            return "Great job! You've completed most care steps."
         } else if completedCount > 0 {
-            return "Good start! Don't forget to check on the remaining plants."
+            return "Good start! Don't forget the remaining care steps."
         } else {
-            return "No plants were marked as cared for."
+            return "No care steps were completed."
         }
     }
     
@@ -362,7 +467,7 @@ struct CompletionView: View {
                     .font(.title)
                     .fontWeight(.bold)
                 
-                Text("\(completedCount) of \(totalCount) plants cared for")
+                Text("\(completedCount) of \(totalCount) care steps completed")
                     .font(.title3)
                     .foregroundColor(.secondary)
                 

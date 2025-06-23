@@ -41,19 +41,35 @@ extension ImportedPlant {
             }
         }()
         
-        return Plant(
+        var plant = Plant(
             name: name,
             assignedRoomID: roomID,
             assignedWindowID: windowID,
             preferredLightDirection: preferredDirection,
             lightType: lightTypeEnum,
-            wateringInstructions: wateringInstructions,
             generalNotes: careNotes,
-            lastWateredDate: nil,
-            wateringFrequencyDays: estimateWateringFrequency(),
-            humidityPreference: estimateHumidityPreference(),
-            rotationFrequency: extractRotationFrequency()
+            humidityPreference: estimateHumidityPreference()
         )
+        
+        // Add watering care step
+        let wateringStep = CareStep(
+            type: .watering,
+            instructions: wateringInstructions,
+            frequencyDays: estimateWateringFrequency()
+        )
+        plant.addCareStep(wateringStep)
+        
+        // Add rotation care step if mentioned in notes
+        if let rotationInstructions = extractRotationFrequency() {
+            let rotationStep = CareStep(
+                type: .rotation,
+                instructions: rotationInstructions,
+                frequencyDays: estimateRotationFrequencyDays()
+            )
+            plant.addCareStep(rotationStep)
+        }
+        
+        return plant
     }
     
     private func estimateWateringFrequency() -> Int {
@@ -90,15 +106,24 @@ extension ImportedPlant {
         let notes = careNotes.lowercased()
         if notes.contains("rotate") {
             // Try to extract rotation frequency
-            if notes.contains("weekly") { return "Rotate weekly" }
-            if notes.contains("every week") { return "Rotate weekly" }
-            if notes.contains("every 2 weeks") { return "Rotate every 2 weeks" }
-            if notes.contains("every two weeks") { return "Rotate every 2 weeks" }
-            if notes.contains("every 3 weeks") { return "Rotate every 3 weeks" }
-            if notes.contains("monthly") { return "Rotate monthly" }
-            if notes.contains("every month") { return "Rotate monthly" }
-            return "Rotate periodically"
+            if notes.contains("weekly") { return "Rotate weekly for even growth" }
+            if notes.contains("every week") { return "Rotate weekly for even growth" }
+            if notes.contains("every 2 weeks") { return "Rotate every 2 weeks for even growth" }
+            if notes.contains("every two weeks") { return "Rotate every 2 weeks for even growth" }
+            if notes.contains("every 3 weeks") { return "Rotate every 3 weeks for even growth" }
+            if notes.contains("monthly") { return "Rotate monthly for even growth" }
+            if notes.contains("every month") { return "Rotate monthly for even growth" }
+            return "Rotate periodically for even growth"
         }
         return nil
+    }
+    
+    private func estimateRotationFrequencyDays() -> Int {
+        let notes = careNotes.lowercased()
+        if notes.contains("weekly") || notes.contains("every week") { return 7 }
+        if notes.contains("every 2 weeks") || notes.contains("every two weeks") { return 14 }
+        if notes.contains("every 3 weeks") { return 21 }
+        if notes.contains("monthly") || notes.contains("every month") { return 30 }
+        return 14 // Default to every 2 weeks
     }
 }

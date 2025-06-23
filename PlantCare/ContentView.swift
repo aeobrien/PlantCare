@@ -84,17 +84,38 @@ struct ContentView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(12)
                     }
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        HStack {
+                            Image(systemName: "gear.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.gray)
+                            Text("Settings")
+                                .font(.headline)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                    }
                 }
                 .padding(.horizontal)
                 
                 Spacer()
                 
-                if let lastWateredPlants = dataStore.plants.compactMap({ $0.lastWateredDate }).max() {
+                if let lastCareDate = dataStore.plants
+                    .flatMap({ $0.careSteps })
+                    .compactMap({ $0.lastCompletedDate })
+                    .max() {
                     VStack {
                         Text("Last care session")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text(lastWateredPlants, style: .relative)
+                        Text(lastCareDate, style: .relative)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

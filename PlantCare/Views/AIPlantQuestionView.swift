@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 struct AIPlantQuestionView: View {
     let plant: Plant
@@ -11,6 +12,9 @@ struct AIPlantQuestionView: View {
     @State private var errorMessage = ""
     @State private var aiResponse: AIPlantQuestionResponse?
     @State private var showingReview = false
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
+    @State private var showingPhotoPreview = false
     
     @FocusState private var isQuestionFocused: Bool
     
@@ -32,7 +36,43 @@ struct AIPlantQuestionView: View {
                                 .cornerRadius(8)
                                 .focused($isQuestionFocused)
                             
-                            Text("Examples: Is this plant getting enough light? Should I adjust the watering schedule? Is the room humidity appropriate?")
+                            // Photo picker section
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                                        HStack {
+                                            Image(systemName: "camera")
+                                            Text("Add Photo")
+                                        }
+                                        .font(.subheadline)
+                                        .foregroundColor(.blue)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    if selectedPhotoData != nil {
+                                        Button("Remove Photo") {
+                                            selectedPhoto = nil
+                                            selectedPhotoData = nil
+                                        }
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                    }
+                                }
+                                
+                                if let photoData = selectedPhotoData, let uiImage = UIImage(data: photoData) {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxHeight: 200)
+                                        .cornerRadius(8)
+                                        .onTapGesture {
+                                            showingPhotoPreview = true
+                                        }
+                                }
+                            }
+                            
+                            Text("Examples: Is this plant getting enough light? Should I adjust the watering schedule? Is the room humidity appropriate? You can include a photo to help with visual analysis.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -138,6 +178,24 @@ struct AIPlantQuestionView: View {
             .onAppear {
                 isQuestionFocused = true
             }
+            .onChange(of: selectedPhoto) { _, newPhoto in
+                Task {
+                    if let newPhoto = newPhoto {
+                        do {
+                            if let data = try await newPhoto.loadTransferable(type: Data.self) {
+                                selectedPhotoData = data
+                            }
+                        } catch {
+                            print("Error loading photo: \(error)")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showingPhotoPreview) {
+                if let photoData = selectedPhotoData, let uiImage = UIImage(data: photoData) {
+                    PhotoPreviewView(image: uiImage)
+                }
+            }
         }
     }
     
@@ -156,6 +214,7 @@ struct AIPlantQuestionView: View {
                     question: question,
                     plant: plant,
                     rooms: dataStore.rooms,
+                    photoData: selectedPhotoData,
                     apiKey: apiKey
                 )
                 
@@ -176,6 +235,8 @@ struct AIPlantQuestionView: View {
     func resetForNewQuestion() {
         question = ""
         aiResponse = nil
+        selectedPhoto = nil
+        selectedPhotoData = nil
         isQuestionFocused = true
     }
 }
@@ -240,6 +301,74 @@ struct LoadingView: View {
             .background(Color(.systemBackground))
             .cornerRadius(12)
             .shadow(radius: 10)
+        }
+    }
+}
+
+struct PhotoPreviewView: View {
+    let image: UIImage
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            ZoomableImageView(image: image)
+                .navigationTitle("Photo Preview")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            dismiss()
+                        }
+                    }
+                }
+        }
+    }
+}
+
+struct ZoomableImageView: UIViewRepresentable {
+    let image: UIImage
+    
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.delegate = context.coordinator
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 4.0
+        scrollView.bouncesZoom = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        scrollView.addSubview(imageView)
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+            imageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            imageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+        ])
+        
+        return scrollView
+    }
+    
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        // No updates needed
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UIScrollViewDelegate {
+        let parent: ZoomableImageView
+        
+        init(_ parent: ZoomableImageView) {
+            self.parent = parent
+        }
+        
+        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+            return scrollView.subviews.first
         }
     }
 }

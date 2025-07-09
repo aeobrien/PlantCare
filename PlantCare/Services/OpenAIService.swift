@@ -62,8 +62,8 @@ class OpenAIService {
         
         // Create the request
         let messages = [
-            OpenAIMessage(role: "system", content: systemPrompt),
-            OpenAIMessage(role: "user", content: userPrompt)
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+            OpenAIMessage(role: "user", content: MessageContent.text(userPrompt))
         ]
         
         let request = OpenAIRequest(
@@ -128,7 +128,7 @@ class OpenAIService {
         return plantResponse
     }
     
-    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], apiKey: String) async throws -> AIPlantQuestionResponse {
+    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], photoData: Data?, apiKey: String) async throws -> AIPlantQuestionResponse {
         // Create the plant information JSON
         let plantInfo: [String: Any] = [
             "name": plant.name,
@@ -171,7 +171,7 @@ class OpenAIService {
         
         // Create the prompt
         let systemPrompt = """
-        You are a plant care expert assistant. You are being asked a question about a specific plant and its care.
+        You are a plant care expert assistant. You are being asked a question about a specific plant and its care. If an image is provided, analyze it thoroughly to provide more accurate advice.
         
         You must respond with ONLY a valid JSON object. Do not include any other text, markdown formatting, or explanations. Just return the raw JSON matching this exact structure:
         {
@@ -213,16 +213,35 @@ class OpenAIService {
         \(roomsString)
         
         User's question: \(question)
+        \(photoData != nil ? "\n\nI've included a photo of the plant for your analysis." : "")
         """
         
-        // Create the request
-        let messages = [
-            OpenAIMessage(role: "system", content: systemPrompt),
-            OpenAIMessage(role: "user", content: userPrompt)
-        ]
+        // Create the request with image support if photo is provided
+        let messages: [OpenAIMessage]
+        
+        if let photoData = photoData {
+            // Convert image data to base64
+            let base64Image = photoData.base64EncodedString()
+            let imageUrl = "data:image/jpeg;base64,\(base64Image)"
+            
+            let userContent = MessageContent.array([
+                ContentItem(type: "text", text: userPrompt, image_url: nil),
+                ContentItem(type: "image_url", text: nil, image_url: ContentItem.ImageURL(url: imageUrl))
+            ])
+            
+            messages = [
+                OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+                OpenAIMessage(role: "user", content: userContent)
+            ]
+        } else {
+            messages = [
+                OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+                OpenAIMessage(role: "user", content: MessageContent.text(userPrompt))
+            ]
+        }
         
         let request = OpenAIRequest(
-            model: "gpt-3.5-turbo",
+            model: photoData != nil ? "gpt-4o" : "gpt-3.5-turbo",
             messages: messages,
             temperature: 0.7,
             response_format: nil

@@ -30,7 +30,43 @@ struct OpenAIRequest: Codable {
 
 struct OpenAIMessage: Codable {
     let role: String
-    let content: String
+    let content: MessageContent
+}
+
+enum MessageContent: Codable {
+    case text(String)
+    case array([ContentItem])
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let text = try? container.decode(String.self) {
+            self = .text(text)
+        } else if let array = try? container.decode([ContentItem].self) {
+            self = .array(array)
+        } else {
+            throw DecodingError.typeMismatch(MessageContent.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Expected String or Array"))
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .text(let text):
+            try container.encode(text)
+        case .array(let array):
+            try container.encode(array)
+        }
+    }
+}
+
+struct ContentItem: Codable {
+    let type: String
+    let text: String?
+    let image_url: ImageURL?
+    
+    struct ImageURL: Codable {
+        let url: String
+    }
 }
 
 struct OpenAIResponse: Codable {

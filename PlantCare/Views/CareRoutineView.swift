@@ -377,7 +377,7 @@ struct CareStepCard: View {
                     Text(careStep.instructions)
                         .font(.caption)
                         .foregroundColor(.secondary)
-                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
                 Spacer()
@@ -459,15 +459,7 @@ struct CompletionView: View {
     let totalCount: Int
     
     var message: String {
-        if completedCount == totalCount {
-            return "Perfect! You've completed all care steps!"
-        } else if completedCount > totalCount / 2 {
-            return "Great job! You've completed most care steps."
-        } else if completedCount > 0 {
-            return "Good start! Don't forget the remaining care steps."
-        } else {
-            return "No care steps were completed."
-        }
+        return "Well done on completing your plant care routine!"
     }
     
     var body: some View {

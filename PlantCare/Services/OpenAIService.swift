@@ -6,23 +6,36 @@ class OpenAIService {
     
     private let baseURL = "https://api.openai.com/v1/chat/completions"
     
-    func generatePlantRecommendation(plantName: String, rooms: [Room], apiKey: String) async throws -> AIPlantResponse {
-        // Create the room information JSON
+    func generatePlantRecommendation(plantName: String, rooms: [Room], zones: [Zone], preference: SpacePlacementPreference, apiKey: String) async throws -> AIPlantResponse {
+        // Create the room and zone information JSON
         let roomsInfo = rooms.map { room in
             [
                 "name": room.name,
+                "type": "indoor",
                 "windows": room.windows.map { window in
                     ["direction": window.direction.rawValue]
                 }
             ]
         }
         
-        let roomsJSON = try JSONSerialization.data(withJSONObject: roomsInfo, options: .prettyPrinted)
-        let roomsString = String(data: roomsJSON, encoding: .utf8) ?? "[]"
+        let zonesInfo = zones.map { zone in
+            [
+                "name": zone.name,
+                "type": "outdoor",
+                "aspect": zone.aspect.rawValue,
+                "sunPeriod": zone.sunPeriod.rawValue,
+                "wind": zone.wind.rawValue,
+                "sunHours": zone.sunHours?.rawValue ?? zone.inferredSunHours.rawValue
+            ]
+        }
+        
+        let spacesInfo = roomsInfo + zonesInfo
+        let spacesJSON = try JSONSerialization.data(withJSONObject: spacesInfo, options: .prettyPrinted)
+        let spacesString = String(data: spacesJSON, encoding: .utf8) ?? "[]"
         
         // Create the prompt
         let systemPrompt = """
-        You are a plant care expert assistant. Your role is to provide detailed care recommendations for plants based on their species and the user's home layout.
+        You are a plant care expert assistant. Your role is to provide detailed care recommendations for plants based on their species and the user's home layout including both indoor and outdoor spaces.
         
         You must respond with ONLY a valid JSON object. Do not include any other text, markdown formatting, or explanations. Just return the raw JSON matching this exact structure:
         {
@@ -39,25 +52,39 @@ class OpenAIService {
             "rotationInstructions": "Rotation instructions (optional)",
             "rotationFrequencyDays": number (optional),
             "generalNotes": "General care notes and tips",
-            "recommendedRooms": ["First choice room name", "Second choice room name"]
+            "recommendedSpaces": ["First choice space name", "Second choice space name"],
+            "recommendedSpaceTypes": ["indoor" | "outdoor", "indoor" | "outdoor"]
         }
         
-        Base your room recommendations on:
+        Base your space recommendations on:
+        
+        For indoor spaces:
         1. The plant's light requirements vs available window directions
         2. The plant's humidity needs
         3. Temperature preferences (south-facing rooms tend to be warmer)
         
-        Provide at least 2 room recommendations ordered by suitability.
+        For outdoor zones:
+        1. Plant hardiness and outdoor suitability
+        2. Sun exposure (aspect, sun period, sun hours)
+        3. Wind tolerance vs zone wind exposure
+        4. Whether the plant can thrive outdoors in typical conditions
+        
+        Consider the user's placement preference but also factor in plant suitability.
+        If a plant is not suitable for outdoor placement, recommend only indoor spaces even if outdoor was preferred.
+        
+        Provide at least 2 space recommendations ordered by suitability.
         Remember: Return ONLY the JSON object, no other text.
         """
         
         let userPrompt = """
         I have a \(plantName) and need care recommendations.
         
-        My home has the following rooms:
-        \(roomsString)
+        My placement preference is: \(preference.rawValue)
         
-        Please provide complete care instructions and recommend the best rooms for this plant based on its needs and my available rooms.
+        My home has the following spaces:
+        \(spacesString)
+        
+        Please provide complete care instructions and recommend the best spaces for this plant based on its needs, my preference, and my available spaces.
         """
         
         // Create the request
@@ -128,11 +155,26 @@ class OpenAIService {
         return plantResponse
     }
     
-    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], photoData: Data?, apiKey: String) async throws -> AIPlantQuestionResponse {
+    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], zones: [Zone], photoData: Data?, apiKey: String) async throws -> AIPlantQuestionResponse {
         // Create the plant information JSON
+        let currentLocation: String
+        let currentLocationType: String
+        
+        if let roomID = plant.assignedRoomID, let room = rooms.first(where: { $0.id == roomID }) {
+            currentLocation = room.name
+            currentLocationType = "indoor"
+        } else if let zoneID = plant.assignedZoneID, let zone = zones.first(where: { $0.id == zoneID }) {
+            currentLocation = zone.name
+            currentLocationType = "outdoor"
+        } else {
+            currentLocation = "Not assigned"
+            currentLocationType = "none"
+        }
+        
         let plantInfo: [String: Any] = [
             "name": plant.name,
-            "currentRoom": rooms.first(where: { $0.id == plant.assignedRoomID })?.name ?? "Not assigned",
+            "currentLocation": currentLocation,
+            "currentLocationType": currentLocationType,
             "currentWindow": plant.assignedWindowID != nil ? 
                 rooms.flatMap { $0.windows }.first(where: { $0.id == plant.assignedWindowID })?.direction.rawValue ?? "Unknown" : 
                 "Not assigned to window",
@@ -156,18 +198,31 @@ class OpenAIService {
         let plantJSON = try JSONSerialization.data(withJSONObject: plantInfo, options: .prettyPrinted)
         let plantString = String(data: plantJSON, encoding: .utf8) ?? "{}"
         
-        // Create rooms info JSON
+        // Create spaces info JSON
         let roomsInfo = rooms.map { room in
             [
                 "name": room.name,
+                "type": "indoor",
                 "windows": room.windows.map { window in
                     ["direction": window.direction.rawValue]
                 }
             ]
         }
         
-        let roomsJSON = try JSONSerialization.data(withJSONObject: roomsInfo, options: .prettyPrinted)
-        let roomsString = String(data: roomsJSON, encoding: .utf8) ?? "[]"
+        let zonesInfo = zones.map { zone in
+            [
+                "name": zone.name,
+                "type": "outdoor",
+                "aspect": zone.aspect.rawValue,
+                "sunPeriod": zone.sunPeriod.rawValue,
+                "wind": zone.wind.rawValue,
+                "sunHours": zone.sunHours?.rawValue ?? zone.inferredSunHours.rawValue
+            ]
+        }
+        
+        let spacesInfo = roomsInfo + zonesInfo
+        let spacesJSON = try JSONSerialization.data(withJSONObject: spacesInfo, options: .prettyPrinted)
+        let spacesString = String(data: spacesJSON, encoding: .utf8) ?? "[]"
         
         // Create the prompt
         let systemPrompt = """
@@ -200,7 +255,9 @@ class OpenAIService {
         3. If no changes are suggested, set suggestedChanges to null
         4. For assignedRoomID, use the room NAME (not an ID) if suggesting a room change
         5. Only suggest changes that directly relate to the user's question
-        6. Base room recommendations on the plant's needs and available rooms/windows
+        6. Base space recommendations on the plant's needs and available spaces (both indoor rooms and outdoor zones)
+        7. For outdoor zones, consider plant hardiness, sun tolerance, and wind exposure
+        8. For assignedRoomID, use the space NAME regardless of whether it's indoor or outdoor
         
         Remember: Return ONLY the JSON object, no other text.
         """
@@ -209,8 +266,8 @@ class OpenAIService {
         Current plant information:
         \(plantString)
         
-        Available rooms in the home:
-        \(roomsString)
+        Available spaces in the home (both indoor and outdoor):
+        \(spacesString)
         
         User's question: \(question)
         \(photoData != nil ? "\n\nI've included a photo of the plant for your analysis." : "")

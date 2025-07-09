@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct PlantChangeReviewView: View {
     let plant: Plant
@@ -25,13 +26,24 @@ struct PlantChangeReviewView: View {
         return keys
     }
     
-    var suggestedRoom: Room? {
-        guard let roomName = suggestedChanges.assignedRoomID else { return nil }
-        return dataStore.rooms.first { $0.name == roomName }
+    var suggestedSpace: (name: String, type: String)? {
+        guard let spaceName = suggestedChanges.assignedRoomID else { return nil }
+        
+        if let room = dataStore.rooms.first(where: { $0.name == spaceName }) {
+            return (room.name, "indoor")
+        } else if let zone = dataStore.zones.first(where: { $0.name == spaceName }) {
+            return (zone.name, "outdoor")
+        }
+        return nil
     }
     
-    var currentRoom: Room? {
-        dataStore.roomForPlant(plant)
+    var currentSpace: String {
+        if let room = dataStore.roomForPlant(plant) {
+            return room.name
+        } else if let zone = dataStore.zoneForPlant(plant) {
+            return zone.name
+        }
+        return "Not assigned"
     }
     
     var body: some View {
@@ -53,14 +65,15 @@ struct PlantChangeReviewView: View {
                             )
                         }
                         
-                        if let roomName = suggestedChanges.assignedRoomID {
+                        if let spaceName = suggestedChanges.assignedRoomID {
+                            let spaceType = suggestedSpace?.type ?? "unknown"
                             ChangeCard(
-                                title: "Room",
-                                current: currentRoom?.name ?? "Not assigned",
-                                suggested: roomName,
+                                title: "Location",
+                                current: currentSpace,
+                                suggested: "\(spaceName)\(spaceType == "outdoor" ? " (Outdoor)" : "")",
                                 isSelected: selectedChanges.contains("room"),
                                 onToggle: { toggleChange("room") },
-                                warning: suggestedRoom == nil ? "Room '\(roomName)' not found" : nil
+                                warning: suggestedSpace == nil ? "Space '\(spaceName)' not found" : nil
                             )
                         }
                         
@@ -181,7 +194,7 @@ struct PlantChangeReviewView: View {
                 // Auto-select all valid changes
                 selectedChanges = Set(allChangeKeys.filter { key in
                     // Don't auto-select room changes if the room doesn't exist
-                    if key == "room" && suggestedRoom == nil {
+                    if key == "room" && suggestedSpace == nil {
                         return false
                     }
                     return true
@@ -200,8 +213,8 @@ struct PlantChangeReviewView: View {
     
     func selectAll() {
         selectedChanges = Set(allChangeKeys.filter { key in
-            // Don't select room changes if the room doesn't exist
-            if key == "room" && suggestedRoom == nil {
+            // Don't select room changes if the space doesn't exist
+            if key == "room" && suggestedSpace == nil {
                 return false
             }
             return true
@@ -219,14 +232,25 @@ struct PlantChangeReviewView: View {
             updatedPlant.name = newName
         }
         
-        if selectedChanges.contains("room"), let room = suggestedRoom {
-            updatedPlant.assignedRoomID = room.id
-            // Auto-select window if room has only one
-            if room.windows.count == 1, let window = room.windows.first {
-                updatedPlant.assignedWindowID = window.id
-            } else {
-                // Clear window assignment when changing rooms with multiple windows
-                updatedPlant.assignedWindowID = nil
+        if selectedChanges.contains("room"), let space = suggestedSpace {
+            if space.type == "indoor" {
+                if let room = dataStore.rooms.first(where: { $0.name == space.name }) {
+                    updatedPlant.assignedRoomID = room.id
+                    updatedPlant.assignedZoneID = nil
+                    // Auto-select window if room has only one
+                    if room.windows.count == 1, let window = room.windows.first {
+                        updatedPlant.assignedWindowID = window.id
+                    } else {
+                        // Clear window assignment when changing rooms with multiple windows
+                        updatedPlant.assignedWindowID = nil
+                    }
+                }
+            } else if space.type == "outdoor" {
+                if let zone = dataStore.zones.first(where: { $0.name == space.name }) {
+                    updatedPlant.assignedZoneID = zone.id
+                    updatedPlant.assignedRoomID = nil
+                    updatedPlant.assignedWindowID = nil
+                }
             }
         }
         
@@ -368,6 +392,31 @@ struct CareStepsChangeCard: View {
         return suggestion.type == lastSuggestion.type
     }
     
+    var checkmarkImage: some View {
+        Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+            .font(.title2)
+            .foregroundColor(isSelected ? .blue : .secondary)
+    }
+    
+    var stepsList: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(suggestedSteps, id: \.type) { suggestion in
+                VStack(alignment: .leading, spacing: 4) {
+                    CareStepSuggestionRow(
+                        suggestion: suggestion,
+                        isExisting: isExistingStep(suggestion)
+                    )
+                }
+                .padding(.vertical, 4)
+                
+                if !isLastSuggestion(suggestion) {
+                    Divider()
+                }
+            }
+        }
+        .padding(.horizontal, 8)
+    }
+    
     var body: some View {
         Button(action: onToggle) {
             VStack(alignment: .leading, spacing: 12) {
@@ -377,27 +426,10 @@ struct CareStepsChangeCard: View {
                     
                     Spacer()
                     
-                    Image(systemName: isSelected ? "checkmark.square.fill" : "square")
-                        .font(.title2)
-                        .foregroundColor(isSelected ? .blue : .secondary)
+                    checkmarkImage
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(suggestedSteps, id: \.type) { suggestion in
-                        VStack(alignment: .leading, spacing: 4) {
-                            CareStepSuggestionRow(
-                                suggestion: suggestion,
-                                isExisting: isExistingStep(suggestion)
-                            )
-                        }
-                        .padding(.vertical, 4)
-                        
-                        if !isLastSuggestion(suggestion) {
-                            Divider()
-                        }
-                    }
-                }
-                .padding(.horizontal, 8)
+                stepsList
             }
             .padding()
             .background(
@@ -456,12 +488,12 @@ struct CareStepSuggestionRow: View {
             name: "Updated Plant Name",
             assignedRoomID: "Living Room",
             assignedWindowID: nil,
-            lightType: .indirect,
-            preferredLightDirection: .east,
-            humidityPreference: .high,
+            lightType: LightType.indirect,
+            preferredLightDirection: Direction.east,
+            humidityPreference: HumidityPreference.high,
             generalNotes: "This plant needs more frequent watering in summer",
             careSteps: [
-                CareSuggestion(type: .watering, customName: nil, instructions: "Water thoroughly", frequencyDays: 5)
+                CareSuggestion(type: CareStepType.watering, customName: nil, instructions: "Water thoroughly", frequencyDays: 5)
             ]
         ),
         onApprove: { _ in }

@@ -15,6 +15,11 @@ struct PlantDetailView: View {
         return dataStore.roomForPlant(plant)
     }
     
+    var zone: Zone? {
+        guard let plant = plant else { return nil }
+        return dataStore.zoneForPlant(plant)
+    }
+    
     var window: Window? {
         guard let plant = plant else { return nil }
         return dataStore.windowForPlant(plant)
@@ -28,18 +33,50 @@ struct PlantDetailView: View {
                         SectionHeader(title: "Location & Light")
                     
                     VStack(spacing: 12) {
-                        InfoRow(
-                            icon: "house",
-                            label: "Room",
-                            value: room?.name ?? "Not assigned",
-                            isEmpty: room == nil
-                        )
-                        
-                        if let window = window {
+                        if let room = room {
                             InfoRow(
-                                icon: "window.ceiling",
-                                label: "Window",
-                                value: window.direction.rawValue
+                                icon: "house",
+                                label: "Indoor Space",
+                                value: room.name
+                            )
+                            
+                            if let window = window {
+                                InfoRow(
+                                    icon: "window.ceiling",
+                                    label: "Window",
+                                    value: window.direction.rawValue
+                                )
+                            }
+                        } else if let zone = zone {
+                            InfoRow(
+                                icon: "sun.max",
+                                label: "Outdoor Zone",
+                                value: zone.name
+                            )
+                            
+                            InfoRow(
+                                icon: "building.2",
+                                label: "Aspect",
+                                value: zone.aspect.rawValue
+                            )
+                            
+                            InfoRow(
+                                icon: "clock",
+                                label: "Sun Period",
+                                value: zone.sunPeriod.rawValue
+                            )
+                            
+                            InfoRow(
+                                icon: "wind",
+                                label: "Wind",
+                                value: zone.wind.rawValue
+                            )
+                        } else {
+                            InfoRow(
+                                icon: "questionmark.circle",
+                                label: "Location",
+                                value: "Not assigned",
+                                isEmpty: true
                             )
                         }
                         
@@ -336,6 +373,7 @@ struct EditPlantView: View {
     
     @State private var plantName: String = ""
     @State private var selectedRoomID: UUID?
+    @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
     @State private var preferredLightDirection: Direction = .east
     @State private var lightType: LightType = .indirect
@@ -347,6 +385,11 @@ struct EditPlantView: View {
     var selectedRoom: Room? {
         guard let roomID = selectedRoomID else { return nil }
         return dataStore.rooms.first { $0.id == roomID }
+    }
+    
+    var selectedZone: Zone? {
+        guard let zoneID = selectedZoneID else { return nil }
+        return dataStore.zones.first { $0.id == zoneID }
     }
     
     var body: some View {
@@ -462,6 +505,7 @@ struct EditPlantView: View {
             .onAppear {
                 plantName = plant.name
                 selectedRoomID = plant.assignedRoomID
+                selectedZoneID = plant.assignedZoneID
                 selectedWindowID = plant.assignedWindowID
                 preferredLightDirection = plant.preferredLightDirection
                 lightType = plant.lightType
@@ -475,6 +519,7 @@ struct EditPlantView: View {
     func saveChanges() {
         plant.name = plantName
         plant.assignedRoomID = selectedRoomID
+        plant.assignedZoneID = selectedZoneID
         plant.assignedWindowID = selectedWindowID
         plant.preferredLightDirection = preferredLightDirection
         plant.lightType = lightType

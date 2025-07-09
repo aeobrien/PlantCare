@@ -214,6 +214,7 @@ struct AIPlantQuestionView: View {
                     question: question,
                     plant: plant,
                     rooms: dataStore.rooms,
+                    zones: dataStore.zones,
                     photoData: selectedPhotoData,
                     apiKey: apiKey
                 )

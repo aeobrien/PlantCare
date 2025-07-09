@@ -5,11 +5,13 @@ class DataStore: ObservableObject {
     static let shared = DataStore()
     
     @Published var rooms: [Room] = []
+    @Published var zones: [Zone] = []
     @Published var plants: [Plant] = []
     @Published var currentCareSession: CareSession?
     @Published var settings: AppSettings = AppSettings()
     
     private let roomsKey = "savedRooms"
+    private let zonesKey = "savedZones"
     private let plantsKey = "savedPlants"
     private let settingsKey = "appSettings"
     
@@ -23,6 +25,11 @@ class DataStore: ObservableObject {
             self.rooms = decodedRooms
         } else {
             loadDefaultRooms()
+        }
+        
+        if let zonesData = UserDefaults.standard.data(forKey: zonesKey),
+           let decodedZones = try? JSONDecoder().decode([Zone].self, from: zonesData) {
+            self.zones = decodedZones
         }
         
         if let plantsData = UserDefaults.standard.data(forKey: plantsKey) {
@@ -103,6 +110,10 @@ class DataStore: ObservableObject {
     func saveData() {
         if let encodedRooms = try? JSONEncoder().encode(rooms) {
             UserDefaults.standard.set(encodedRooms, forKey: roomsKey)
+        }
+        
+        if let encodedZones = try? JSONEncoder().encode(zones) {
+            UserDefaults.standard.set(encodedZones, forKey: zonesKey)
         }
         
         if let encodedPlants = try? JSONEncoder().encode(plants) {
@@ -375,6 +386,42 @@ class DataStore: ObservableObject {
         saveData()
     }
     
+    func addZone(_ zone: Zone) {
+        zones.append(zone)
+        saveData()
+    }
+    
+    func updateZone(_ zone: Zone) {
+        if let index = zones.firstIndex(where: { $0.id == zone.id }) {
+            zones[index] = zone
+            saveData()
+        }
+    }
+    
+    func deleteZone(at offsets: IndexSet) {
+        let zonesToDelete = offsets.map { zones[$0] }
+        for zone in zonesToDelete {
+            plants = plants.map { plant in
+                if plant.assignedZoneID == zone.id {
+                    var updatedPlant = plant
+                    updatedPlant.assignedZoneID = nil
+                    return updatedPlant
+                }
+                return plant
+            }
+        }
+        zones.remove(atOffsets: offsets)
+        saveData()
+    }
+    
+    func moveZone(from source: IndexSet, to destination: Int) {
+        zones.move(fromOffsets: source, toOffset: destination)
+        for (index, zone) in zones.enumerated() {
+            zones[index].orderIndex = index
+        }
+        saveData()
+    }
+    
     func addPlant(_ plant: Plant) {
         plants.append(plant)
         saveData()
@@ -418,9 +465,18 @@ class DataStore: ObservableObject {
         plants.filter { $0.assignedRoomID == room.id }
     }
     
+    func plantsInZone(_ zone: Zone) -> [Plant] {
+        plants.filter { $0.assignedZoneID == zone.id }
+    }
+    
     func roomForPlant(_ plant: Plant) -> Room? {
         guard let roomID = plant.assignedRoomID else { return nil }
         return rooms.first { $0.id == roomID }
+    }
+    
+    func zoneForPlant(_ plant: Plant) -> Zone? {
+        guard let zoneID = plant.assignedZoneID else { return nil }
+        return zones.first { $0.id == zoneID }
     }
     
     func windowForPlant(_ plant: Plant) -> Window? {
@@ -488,5 +544,11 @@ class DataStore: ObservableObject {
             
             return orderedRooms
         }
+    }
+    
+    func orderedZonesForCareRoutine() -> [Zone] {
+        return zones
+            .filter { zone in plantsInZone(zone).count > 0 }
+            .sorted(by: { $0.orderIndex < $1.orderIndex })
     }
 }

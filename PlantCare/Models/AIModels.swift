@@ -14,7 +14,18 @@ struct AIPlantResponse: Codable {
     let rotationInstructions: String?
     let rotationFrequencyDays: Int?
     let generalNotes: String
-    let recommendedRooms: [String]
+    let recommendedRooms: [String]?  // Legacy support
+    let recommendedSpaces: [String]?
+    let recommendedSpaceTypes: [String]?
+    
+    // Computed property for backward compatibility
+    var spaces: [String] {
+        recommendedSpaces ?? recommendedRooms ?? []
+    }
+    
+    var spaceTypes: [String] {
+        recommendedSpaceTypes ?? Array(repeating: "indoor", count: spaces.count)
+    }
 }
 
 struct OpenAIRequest: Codable {

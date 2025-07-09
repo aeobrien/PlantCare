@@ -174,11 +174,13 @@ struct AddPlantView: View {
     
     @State private var plantName = ""
     @State private var selectedRoomID: UUID?
+    @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
     @State private var preferredLightDirection = Direction.east
     @State private var lightType = LightType.indirect
     @State private var generalNotes = ""
     @State private var humidityPreference = HumidityPreference.medium
+    @State private var isIndoor = true
     
     var selectedRoom: Room? {
         guard let roomID = selectedRoomID else { return nil }
@@ -205,29 +207,50 @@ struct AddPlantView: View {
                 }
                 
                 Section(header: Text("Location")) {
-                    Picker("Room", selection: $selectedRoomID) {
-                        Text("None").tag(nil as UUID?)
-                        ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
-                            Text(room.name).tag(room.id as UUID?)
-                        }
+                    Picker("Space Type", selection: $isIndoor) {
+                        Text("Indoor").tag(true)
+                        Text("Outdoor").tag(false)
                     }
-                    .onChange(of: selectedRoomID) { newRoomID in
-                        // Auto-select window if room has only one
-                        if let roomID = newRoomID,
-                           let room = dataStore.rooms.first(where: { $0.id == roomID }),
-                           room.windows.count == 1,
-                           let window = room.windows.first {
-                            selectedWindowID = window.id
-                        } else if newRoomID == nil {
-                            selectedWindowID = nil
-                        }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onChange(of: isIndoor) { _ in
+                        // Reset selections when switching
+                        selectedRoomID = nil
+                        selectedZoneID = nil
+                        selectedWindowID = nil
                     }
                     
-                    if let room = selectedRoom, !room.windows.isEmpty {
-                        Picker("Window", selection: $selectedWindowID) {
+                    if isIndoor {
+                        Picker("Indoor Space", selection: $selectedRoomID) {
                             Text("None").tag(nil as UUID?)
-                            ForEach(room.windows) { window in
-                                Text(window.direction.rawValue).tag(window.id as UUID?)
+                            ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
+                                Text(room.name).tag(room.id as UUID?)
+                            }
+                        }
+                        .onChange(of: selectedRoomID) { newRoomID in
+                            // Auto-select window if room has only one
+                            if let roomID = newRoomID,
+                               let room = dataStore.rooms.first(where: { $0.id == roomID }),
+                               room.windows.count == 1,
+                               let window = room.windows.first {
+                                selectedWindowID = window.id
+                            } else if newRoomID == nil {
+                                selectedWindowID = nil
+                            }
+                        }
+                        
+                        if let room = selectedRoom, !room.windows.isEmpty {
+                            Picker("Window", selection: $selectedWindowID) {
+                                Text("None").tag(nil as UUID?)
+                                ForEach(room.windows) { window in
+                                    Text(window.direction.rawValue).tag(window.id as UUID?)
+                                }
+                            }
+                        }
+                    } else {
+                        Picker("Outdoor Zone", selection: $selectedZoneID) {
+                            Text("None").tag(nil as UUID?)
+                            ForEach(dataStore.zones.sorted(by: { $0.orderIndex < $1.orderIndex })) { zone in
+                                Text(zone.name).tag(zone.id as UUID?)
                             }
                         }
                     }
@@ -268,6 +291,7 @@ struct AddPlantView: View {
         var newPlant = Plant(
             name: plantName,
             assignedRoomID: selectedRoomID,
+            assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,
             preferredLightDirection: preferredLightDirection,
             lightType: lightType,

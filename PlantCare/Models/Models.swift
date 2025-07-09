@@ -96,10 +96,81 @@ struct Room: Identifiable, Codable {
     var orderIndex: Int
 }
 
+enum ZoneAspect: String, CaseIterable, Codable {
+    case open = "Open"
+    case southWall = "South Wall"
+    case northWall = "North Wall"
+    case eastWall = "East Wall"
+    case westWall = "West Wall"
+}
+
+enum SunPeriod: String, CaseIterable, Codable {
+    case am = "AM"
+    case pm = "PM"
+    case all = "ALL"
+}
+
+enum WindExposure: String, CaseIterable, Codable {
+    case sheltered = "Sheltered"
+    case exposed = "Exposed"
+}
+
+enum SunHours: String, CaseIterable, Codable {
+    case zeroToTwo = "0-2"
+    case twoToFour = "2-4"
+    case fourToSix = "4-6"
+    case sixPlus = "6+"
+}
+
+struct Zone: Identifiable, Codable {
+    var id: UUID = UUID()
+    var name: String
+    var aspect: ZoneAspect
+    var sunPeriod: SunPeriod
+    var wind: WindExposure
+    var sunHours: SunHours?
+    var orderIndex: Int
+    
+    var inferredSunHours: SunHours {
+        if let sunHours = sunHours {
+            return sunHours
+        }
+        
+        switch (aspect, sunPeriod) {
+        case (.southWall, .all):
+            return .sixPlus
+        case (.northWall, _):
+            return .zeroToTwo
+        case (.eastWall, .am):
+            return .twoToFour
+        case (.westWall, .pm):
+            return .twoToFour
+        case (.open, .all):
+            return .sixPlus
+        case (.open, _):
+            return .fourToSix
+        default:
+            return .twoToFour
+        }
+    }
+}
+
+enum SpaceType {
+    case indoor(Room)
+    case outdoor(Zone)
+}
+
+enum SpacePlacementPreference: String, CaseIterable {
+    case indoor = "Indoor"
+    case outdoor = "Outdoor"
+    case noPreference = "No Preference"
+}
+
 struct Plant: Identifiable, Codable {
     var id: UUID = UUID()
     var name: String
     var assignedRoomID: UUID?
+    var assignedZoneID: UUID?
     var assignedWindowID: UUID?
     
     var preferredLightDirection: Direction

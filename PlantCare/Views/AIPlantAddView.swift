@@ -5,6 +5,7 @@ struct AIPlantAddView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var plantName = ""
+    @State private var placementPreference: SpacePlacementPreference = .noPreference
     @State private var isLoading = false
     @State private var showingAddPlantView = false
     @State private var generatedPlantData: AIPlantResponse?
@@ -33,6 +34,19 @@ struct AIPlantAddView: View {
                     TextField("e.g., Monstera, Fiddle Leaf Fig, Snake Plant", text: $plantName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.words)
+                }
+                .padding(.horizontal)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Placement Preference")
+                        .font(.headline)
+                    
+                    Picker("Placement", selection: $placementPreference) {
+                        ForEach(SpacePlacementPreference.allCases, id: \.self) { preference in
+                            Text(preference.rawValue).tag(preference)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                 }
                 .padding(.horizontal)
                 
@@ -113,6 +127,8 @@ struct AIPlantAddView: View {
                 let response = try await OpenAIService.shared.generatePlantRecommendation(
                     plantName: plantName,
                     rooms: dataStore.rooms,
+                    zones: dataStore.zones,
+                    preference: placementPreference,
                     apiKey: dataStore.settings.openAIAPIKey
                 )
                 
@@ -140,6 +156,7 @@ struct AIGeneratedAddPlantView: View {
     
     @State private var plantName: String
     @State private var selectedRoomID: UUID?
+    @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
     @State private var preferredLightDirection: Direction
     @State private var lightType: LightType
@@ -218,77 +235,101 @@ struct AIGeneratedAddPlantView: View {
                 }
                 
                 Section(header: Text("AI Recommended Location")) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        if let firstChoice = plantData.recommendedRooms.first,
-                           let room = dataStore.rooms.first(where: { $0.name == firstChoice }) {
+                    if !plantData.spaces.isEmpty {
+                        HStack {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.red)
+                            Text("AI Recommendations")
+                                .font(.caption)
+                                .foregroundColor(.red)
+                        }
+                        
+                        ForEach(plantData.spaces.prefix(2).enumerated().map { ($0.offset, $0.element) }, id: \.1) { index, spaceName in
+                            let spaceType = index < plantData.spaceTypes.count ? plantData.spaceTypes[index] : "indoor"
                             
-                            HStack {
-                                Image(systemName: "sparkles")
-                                    .foregroundColor(.red)
-                                Text("AI Recommendation")
-                                    .font(.caption)
-                                    .foregroundColor(.red)
-                            }
-                            
-                            Picker("Room", selection: $selectedRoomID) {
-                                Text("None").tag(nil as UUID?)
-                                
-                                // Show recommended rooms first in red
-                                ForEach(plantData.recommendedRooms.prefix(2).enumerated().map { ($0.offset, $0.element) }, id: \.1) { index, roomName in
-                                    if let room = dataStore.rooms.first(where: { $0.name == roomName }) {
+                            if spaceType == "indoor" {
+                                if let room = dataStore.rooms.first(where: { $0.name == spaceName }) {
+                                    Button(action: {
+                                        selectedRoomID = room.id
+                                        selectedZoneID = nil
+                                        if room.windows.count == 1 {
+                                            selectedWindowID = room.windows.first?.id
+                                        }
+                                    }) {
                                         HStack {
+                                            Image(systemName: "house")
+                                                .foregroundColor(.blue)
                                             Text(room.name)
-                                                .foregroundColor(.red)
                                             Text(index == 0 ? "(1st Choice)" : "(2nd Choice)")
                                                 .font(.caption)
-                                                .foregroundColor(.red)
+                                            Spacer()
+                                            if selectedRoomID == room.id {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(.green)
+                                            }
                                         }
-                                        .tag(room.id as UUID?)
                                     }
+                                    .foregroundColor(selectedRoomID == room.id ? .primary : .red)
                                 }
-                                
-                                // Show other rooms
-                                ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
-                                    if !plantData.recommendedRooms.prefix(2).contains(room.name) {
-                                        Text(room.name).tag(room.id as UUID?)
+                            } else {
+                                if let zone = dataStore.zones.first(where: { $0.name == spaceName }) {
+                                    Button(action: {
+                                        selectedZoneID = zone.id
+                                        selectedRoomID = nil
+                                        selectedWindowID = nil
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "sun.max")
+                                                .foregroundColor(.green)
+                                            Text(zone.name)
+                                            Text(index == 0 ? "(1st Choice)" : "(2nd Choice)")
+                                                .font(.caption)
+                                            Spacer()
+                                            if selectedZoneID == zone.id {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(.green)
+                                            }
+                                        }
                                     }
+                                    .foregroundColor(selectedZoneID == zone.id ? .primary : .red)
                                 }
                             }
-                            .onAppear {
-                                // Set the first recommended room as default
-                                if selectedRoomID == nil,
-                                   let firstRoom = dataStore.rooms.first(where: { $0.name == firstChoice }) {
-                                    selectedRoomID = firstRoom.id
-                                }
+                        }
+                        
+                        Divider()
+                    }
+                    
+                    Picker("Space Type", selection: Binding(
+                        get: { selectedRoomID != nil ? 0 : (selectedZoneID != nil ? 1 : 0) },
+                        set: { newValue in
+                            if newValue == 0 {
+                                selectedZoneID = nil
+                            } else {
+                                selectedRoomID = nil
+                                selectedWindowID = nil
                             }
-                            .onChange(of: selectedRoomID) { newRoomID in
-                                // Auto-select window if room has only one
-                                if let roomID = newRoomID,
-                                   let room = dataStore.rooms.first(where: { $0.id == roomID }),
-                                   room.windows.count == 1,
-                                   let window = room.windows.first {
-                                    selectedWindowID = window.id
-                                } else if newRoomID == nil {
-                                    selectedWindowID = nil
-                                }
+                        }
+                    )) {
+                        Text("Indoor").tag(0)
+                        Text("Outdoor").tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    
+                    if selectedRoomID != nil || (selectedRoomID == nil && selectedZoneID == nil) {
+                        Picker("Indoor Space", selection: $selectedRoomID) {
+                            Text("None").tag(nil as UUID?)
+                            ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
+                                Text(room.name).tag(room.id as UUID?)
                             }
-                        } else {
-                            Picker("Room", selection: $selectedRoomID) {
-                                Text("None").tag(nil as UUID?)
-                                ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
-                                    Text(room.name).tag(room.id as UUID?)
-                                }
-                            }
-                            .onChange(of: selectedRoomID) { newRoomID in
-                                // Auto-select window if room has only one
-                                if let roomID = newRoomID,
-                                   let room = dataStore.rooms.first(where: { $0.id == roomID }),
-                                   room.windows.count == 1,
-                                   let window = room.windows.first {
-                                    selectedWindowID = window.id
-                                } else if newRoomID == nil {
-                                    selectedWindowID = nil
-                                }
+                        }
+                        .onChange(of: selectedRoomID) { newRoomID in
+                            if let roomID = newRoomID,
+                               let room = dataStore.rooms.first(where: { $0.id == roomID }),
+                               room.windows.count == 1,
+                               let window = room.windows.first {
+                                selectedWindowID = window.id
+                            } else if newRoomID == nil {
+                                selectedWindowID = nil
                             }
                         }
                         
@@ -298,6 +339,13 @@ struct AIGeneratedAddPlantView: View {
                                 ForEach(room.windows) { window in
                                     Text(window.direction.rawValue).tag(window.id as UUID?)
                                 }
+                            }
+                        }
+                    } else {
+                        Picker("Outdoor Zone", selection: $selectedZoneID) {
+                            Text("None").tag(nil as UUID?)
+                            ForEach(dataStore.zones.sorted(by: { $0.orderIndex < $1.orderIndex })) { zone in
+                                Text(zone.name).tag(zone.id as UUID?)
                             }
                         }
                     }
@@ -359,6 +407,7 @@ struct AIGeneratedAddPlantView: View {
         var newPlant = Plant(
             name: plantName,
             assignedRoomID: selectedRoomID,
+            assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,
             preferredLightDirection: preferredLightDirection,
             lightType: lightType,

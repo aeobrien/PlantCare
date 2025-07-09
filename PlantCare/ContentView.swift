@@ -46,14 +46,14 @@ struct ContentView: View {
                         .cornerRadius(12)
                     }
                     
-                    NavigationLink(destination: RoomsListView()) {
+                    NavigationLink(destination: SpacesListView()) {
                         HStack {
                             Image(systemName: "house.circle.fill")
                                 .font(.title2)
-                            Text("Rooms")
+                            Text("Spaces")
                                 .font(.headline)
                             Spacer()
-                            Text("\(dataStore.rooms.count)")
+                            Text("\(dataStore.rooms.count + dataStore.zones.count)")
                                 .foregroundColor(.secondary)
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.secondary)

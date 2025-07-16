@@ -41,6 +41,7 @@ class OpenAIService {
         {
             "name": "Plant Name",
             "latinName": "Scientific name in Latin (optional)",
+            "visualDescription": "A simple one-sentence description of what the plant looks like to help identify it (e.g., 'Large leafy plant with holes in the leaves' or 'Tall snake-like leaves with yellow edges')",
             "lightType": "Direct" | "Indirect" | "Low",
             "preferredLightDirection": "North" | "Northeast" | "East" | "Southeast" | "South" | "Southwest" | "West" | "Northwest",
             "humidityPreference": "Low" | "Medium" | "High",
@@ -251,7 +252,7 @@ class OpenAIService {
         }
         
         IMPORTANT RULES:
-        1. Keep your answer brief and to the point (2-3 sentences max)
+        1. Keep your answer brief and to the point (4-5 sentences max)
         2. Only include fields in suggestedChanges if you are actually suggesting a change
         3. If no changes are suggested, set suggestedChanges to null
         4. For assignedRoomID, use the room NAME (not an ID) if suggesting a room change

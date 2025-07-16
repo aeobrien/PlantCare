@@ -7,6 +7,7 @@ struct CareRoutineView: View {
     @State private var currentSpaceIndex = 0
     @State private var completedCareSteps: Set<String> = []
     @State private var showingCompletion = false
+    @State private var plantsWithPhotos: Set<UUID> = []
     
     enum SpaceType {
         case room(Room)
@@ -63,7 +64,7 @@ struct CareRoutineView: View {
                 plants = dataStore.plantsInZone(zone)
             }
             return total + plants.reduce(0) { plantTotal, plant in
-                plantTotal + plant.enabledCareSteps.count
+                plantTotal + plant.visibleCareStepsForRoutine(hideFutureDays: dataStore.settings.hideFutureCareStepsDays).count
             }
         }
     }
@@ -113,8 +114,12 @@ struct CareRoutineView: View {
                                     PlantCareSection(
                                         plant: plant,
                                         completedCareSteps: completedCareSteps,
+                                        hasPhoto: plantsWithPhotos.contains(plant.id),
                                         onToggleCareStep: { careStep in
                                             toggleCareStep(plant: plant, careStep: careStep)
+                                        },
+                                        onPhotoTaken: {
+                                            plantsWithPhotos.insert(plant.id)
                                         }
                                     )
                                 }
@@ -284,7 +289,9 @@ struct SpaceHeader: View {
 struct PlantCareSection: View {
     let plant: Plant
     let completedCareSteps: Set<String>
+    let hasPhoto: Bool
     let onToggleCareStep: (CareStep) -> Void
+    let onPhotoTaken: () -> Void
     @EnvironmentObject var dataStore: DataStore
     @State private var showingAIQuestion = false
     @State private var showingImagePicker = false
@@ -303,6 +310,7 @@ struct PlantCareSection: View {
             PlantHeader(
                 plant: plant,
                 window: window,
+                hasPhoto: hasPhoto,
                 showingAIQuestion: $showingAIQuestion,
                 showingImagePicker: $showingImagePicker
             )
@@ -326,7 +334,7 @@ struct PlantCareSection: View {
             }
             
             VStack(spacing: 8) {
-                ForEach(plant.enabledCareSteps) { careStep in
+                ForEach(plant.visibleCareStepsForRoutine(hideFutureDays: dataStore.settings.hideFutureCareStepsDays)) { careStep in
                     CareStepCard(
                         careStep: careStep,
                         isCompleted: completedCareSteps.contains(careStepKey(careStepID: careStep.id)),
@@ -373,12 +381,14 @@ struct PlantCareSection: View {
         )
         
         dataStore.addPhoto(photo, imageData: imageData)
+        onPhotoTaken()
     }
 }
 
 struct PlantHeader: View {
     let plant: Plant
     let window: Window?
+    let hasPhoto: Bool
     @Binding var showingAIQuestion: Bool
     @Binding var showingImagePicker: Bool
     
@@ -408,9 +418,19 @@ struct PlantHeader: View {
                 Button(action: {
                     showingImagePicker = true
                 }) {
-                    Image(systemName: "camera")
-                        .font(.title3)
-                        .foregroundColor(.green)
+                    ZStack {
+                        Image(systemName: "camera")
+                            .font(.title3)
+                            .foregroundColor(.green)
+                        
+                        if hasPhoto {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.caption)
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.green))
+                                .offset(x: 10, y: -10)
+                        }
+                    }
                 }
                 
                 Button(action: {
@@ -458,8 +478,6 @@ struct CareStepCard: View {
         } else if let daysUntil = careStep.daysUntilDue {
             if daysUntil == 0 {
                 return .orange
-            } else if daysUntil > DataStore.shared.settings.earlyWarningDays {
-                return .red // Subtle warning for early completion
             }
         }
         return .secondary

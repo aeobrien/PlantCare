@@ -5,6 +5,7 @@ import UIKit
 struct AIPlantAddView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
+    var onPlantCreated: ((UUID) -> Void)? = nil
     
     @State private var plantName = ""
     @State private var placementPreference: SpacePlacementPreference = .noPreference
@@ -139,7 +140,16 @@ struct AIPlantAddView: View {
             }
             .sheet(isPresented: $showingAddPlantView) {
                 if let plantData = generatedPlantData {
-                    AIGeneratedAddPlantView(plantData: plantData)
+                    AIGeneratedAddPlantView(plantData: plantData) { plantID in
+                        // First dismiss the AI add view
+                        dismiss()
+                        // Then call the original completion handler if provided
+                        if let onPlantCreated = onPlantCreated {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                onPlantCreated(plantID)
+                            }
+                        }
+                    }
                 }
             }
             .sheet(isPresented: $showingImagePicker) {
@@ -218,11 +228,13 @@ struct AIPlantAddView: View {
 struct AIGeneratedAddPlantView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
+    var onPlantCreated: ((UUID) -> Void)? = nil
     
     let plantData: AIPlantResponse
     
     @State private var plantName: String
     @State private var latinName: String
+    @State private var visualDescription: String
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -232,10 +244,12 @@ struct AIGeneratedAddPlantView: View {
     @State private var humidityPreference: HumidityPreference
     @State private var careSteps: [CareStep] = []
     
-    init(plantData: AIPlantResponse) {
+    init(plantData: AIPlantResponse, onPlantCreated: ((UUID) -> Void)? = nil) {
         self.plantData = plantData
+        self.onPlantCreated = onPlantCreated
         self._plantName = State(initialValue: plantData.name)
         self._latinName = State(initialValue: plantData.latinName ?? "")
+        self._visualDescription = State(initialValue: plantData.visualDescription ?? "")
         self._preferredLightDirection = State(initialValue: plantData.preferredLightDirection)
         self._lightType = State(initialValue: plantData.lightType)
         self._generalNotes = State(initialValue: plantData.generalNotes)
@@ -302,6 +316,14 @@ struct AIGeneratedAddPlantView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             TextField("Latin Name (optional)", text: $latinName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Visual Description")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            TextField("Visual Description (optional)", text: $visualDescription)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                     }
@@ -521,10 +543,12 @@ struct AIGeneratedAddPlantView: View {
     }
     
     func savePlant() {
+        let newPlantID = UUID()
         var newPlant = Plant(
-            id: UUID(),
+            id: newPlantID,
             name: plantName,
             latinName: latinName.isEmpty ? nil : latinName,
+            visualDescription: visualDescription.isEmpty ? nil : visualDescription,
             assignedRoomID: selectedRoomID,
             assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,
@@ -541,7 +565,16 @@ struct AIGeneratedAddPlantView: View {
         }
         
         dataStore.addPlant(newPlant)
+        
+        // Dismiss this view
         dismiss()
+        
+        // Call the completion handler if provided after a delay to ensure proper dismissal
+        if let onPlantCreated = onPlantCreated {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                onPlantCreated(newPlantID)
+            }
+        }
     }
 }
 

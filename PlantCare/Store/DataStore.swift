@@ -475,11 +475,7 @@ class DataStore: ObservableObject {
     
     func markCareStepCompleted(plantID: UUID, careStepID: UUID) {
         currentCareSession?.markCareStepCompleted(plantID: plantID, careStepID: careStepID)
-        if let plantIndex = plants.firstIndex(where: { $0.id == plantID }) {
-            plants[plantIndex].markCareStepCompleted(withId: careStepID)
-            saveData()
-            NotificationManager.shared.updateDailyReminders()
-        }
+        // Don't update the plant immediately - wait for session end
     }
     
     func unmarkCareStepCompleted(plantID: UUID, careStepID: UUID) {
@@ -487,6 +483,18 @@ class DataStore: ObservableObject {
     }
     
     func endCareSession() {
+        // Apply all completed care steps from the session
+        if let session = currentCareSession {
+            for completedStep in session.completedCareSteps {
+                if let plantIndex = plants.firstIndex(where: { $0.id == completedStep.plantID }) {
+                    plants[plantIndex].markCareStepCompleted(withId: completedStep.careStepID, date: completedStep.completedDate)
+                }
+            }
+            if !session.completedCareSteps.isEmpty {
+                saveData()
+                NotificationManager.shared.updateDailyReminders()
+            }
+        }
         currentCareSession = nil
     }
     

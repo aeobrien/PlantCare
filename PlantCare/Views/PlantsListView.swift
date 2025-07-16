@@ -4,7 +4,6 @@ struct PlantsListView: View {
     @EnvironmentObject var dataStore: DataStore
     @State private var showingAddPlant = false
     @State private var showingImport = false
-    @State private var showingAIAdd = false
     @State private var searchText = ""
     @State private var sortOption = PlantsSortOption.nameAscending
     
@@ -109,12 +108,6 @@ struct PlantsListView: View {
                     }) {
                         Label("Import from Clipboard", systemImage: "doc.on.clipboard")
                     }
-                    
-                    Button(action: {
-                        showingAIAdd = true
-                    }) {
-                        Label("Add via AI", systemImage: "sparkles")
-                    }
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -125,9 +118,6 @@ struct PlantsListView: View {
         }
         .sheet(isPresented: $showingImport) {
             ImportPlantsView()
-        }
-        .sheet(isPresented: $showingAIAdd) {
-            AIPlantAddView()
         }
     }
     
@@ -148,13 +138,42 @@ struct PlantsListView: View {
     }
     
     func duplicatePlant(_ plant: Plant) {
+        // Check if the plant name already has a number at the end
+        let pattern = #"^(.+?)\s*#(\d+)$"#
+        let regex = try? NSRegularExpression(pattern: pattern, options: [])
+        
+        var baseName = plant.name
+        var currentNumber = 0
+        
+        if let match = regex?.firstMatch(in: plant.name, options: [], range: NSRange(plant.name.startIndex..., in: plant.name)) {
+            // Extract base name and current number
+            if let baseRange = Range(match.range(at: 1), in: plant.name) {
+                baseName = String(plant.name[baseRange])
+            }
+            if let numberRange = Range(match.range(at: 2), in: plant.name),
+               let number = Int(plant.name[numberRange]) {
+                currentNumber = number
+            }
+        }
+        
+        // If original doesn't have a number, update it to #1
+        if currentNumber == 0 {
+            var originalPlant = plant
+            originalPlant.name = "\(baseName) #1"
+            dataStore.updatePlant(originalPlant)
+            currentNumber = 1
+        }
+        
+        // Create new plant with incremented number
         var newPlant = plant
         newPlant.id = UUID()
-        newPlant.name = "\(plant.name) (Copy)"
+        newPlant.name = "\(baseName) #\(currentNumber + 1)"
+        
         // Reset last completed dates for all care steps
         for i in 0..<newPlant.careSteps.count {
             newPlant.careSteps[i].lastCompletedDate = nil
         }
+        
         dataStore.addPlant(newPlant)
     }
 }
@@ -241,6 +260,7 @@ struct PlantListRow: View {
 struct AddPlantView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
+    var onPlantCreated: ((UUID) -> Void)? = nil
     
     @State private var plantName = ""
     @State private var latinName = ""
@@ -253,6 +273,7 @@ struct AddPlantView: View {
     @State private var generalNotes = ""
     @State private var humidityPreference = HumidityPreference.medium
     @State private var isIndoor = true
+    @State private var showingAIAdd = false
     
     var selectedRoom: Room? {
         guard let roomID = selectedRoomID else { return nil }
@@ -352,11 +373,29 @@ struct AddPlantView: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Button(action: { showingAIAdd = true }) {
+                        Label("Add via AI", systemImage: "sparkles")
+                            .labelStyle(.titleAndIcon)
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         savePlant()
                     }
                     .disabled(plantName.isEmpty)
+                }
+            }
+            .sheet(isPresented: $showingAIAdd) {
+                AIPlantAddView { plantID in
+                    // Dismiss the AddPlantView first
+                    dismiss()
+                    // Then call the original completion handler if provided
+                    if let onPlantCreated = onPlantCreated {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            onPlantCreated(plantID)
+                        }
+                    }
                 }
             }
         }

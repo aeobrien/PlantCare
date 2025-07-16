@@ -40,24 +40,48 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 }
                 
-                Section(header: Text("Warning Settings")) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Early completion warning")
-                            .font(.subheadline)
-                        
-                        Text("Show red warning when completing care steps more than \(settings.earlyWarningDays) days early")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        HStack {
-                            Text("Days")
-                            Spacer()
-                            Picker("Warning Days", selection: $settings.earlyWarningDays) {
-                                ForEach(1...7, id: \.self) { days in
-                                    Text("\(days)").tag(days)
+                Section(header: Text("Care Routine Settings")) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Early completion warning")
+                                .font(.subheadline)
+                            
+                            Text("Show red warning when completing care steps more than \(settings.earlyWarningDays) days early")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            HStack {
+                                Text("Days")
+                                Spacer()
+                                Picker("Warning Days", selection: $settings.earlyWarningDays) {
+                                    ForEach(1...7, id: \.self) { days in
+                                        Text("\(days)").tag(days)
+                                    }
                                 }
+                                .pickerStyle(MenuPickerStyle())
                             }
-                            .pickerStyle(MenuPickerStyle())
+                        }
+                        
+                        Divider()
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Hide future care steps")
+                                .font(.subheadline)
+                            
+                            Text("Hide care steps not due for more than \(settings.hideFutureCareStepsDays) days in care routine")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            HStack {
+                                Text("Days")
+                                Spacer()
+                                Picker("Hide Future Days", selection: $settings.hideFutureCareStepsDays) {
+                                    ForEach([3, 5, 7, 10, 14], id: \.self) { days in
+                                        Text("\(days)").tag(days)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                            }
                         }
                     }
                     .padding(.vertical, 4)

@@ -189,6 +189,23 @@ struct Plant: Identifiable, Codable {
         careSteps.filter { $0.isEnabled }
     }
     
+    func visibleCareStepsForRoutine(hideFutureDays: Int) -> [CareStep] {
+        enabledCareSteps.filter { step in
+            // Always show overdue steps
+            if step.isOverdue {
+                return true
+            }
+            
+            // Show steps due within the configured days
+            if let daysUntil = step.daysUntilDue {
+                return daysUntil <= hideFutureDays
+            }
+            
+            // Show steps without a due date
+            return true
+        }
+    }
+    
     var overdueCareSteps: [CareStep] {
         enabledCareSteps.filter { $0.isOverdue }
     }
@@ -281,6 +298,7 @@ struct AppSettings: Codable {
     var earlyWarningDays: Int = 2
     var customRoomOrder: [UUID] = []
     var openAIAPIKey: String = ""
+    var hideFutureCareStepsDays: Int = 5
     
     init() {}
 }

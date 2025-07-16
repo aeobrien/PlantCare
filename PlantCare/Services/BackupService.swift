@@ -29,8 +29,10 @@ class BackupService: ObservableObject {
     @Published var isRestoreInProgress = false
     @Published var lastBackupDate: Date?
     @Published var iCloudAvailable = false
+    @Published var useLocalStorage = false
     
-    private let containerURL: URL?
+    private var containerURL: URL?
+    private var localBackupURL: URL?
     private let backupDirectoryName = "PlantCareBackups"
     private let fileExtension = "plantcarebackup"
     private let logger = Logger(subsystem: "com.plantcare", category: "Backup")
@@ -43,8 +45,37 @@ class BackupService: ObservableObject {
     }
     
     init() {
+        // Try to get the iCloud container URL
         containerURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)
+        
+        if containerURL == nil {
+            logger.error("Failed to get iCloud container URL. Ensure iCloud entitlements are configured.")
+            // Check if we can get a specific container
+            if let bundleID = Bundle.main.bundleIdentifier {
+                let specificContainer = "iCloud.\(bundleID)"
+                containerURL = FileManager.default.url(forUbiquityContainerIdentifier: specificContainer)
+                if containerURL != nil {
+                    logger.info("Got container URL with specific identifier: \(specificContainer)")
+                }
+            }
+        } else {
+            logger.info("Successfully got iCloud container URL")
+        }
+        
+        // Set up local backup directory as fallback
+        if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            localBackupURL = documentsPath.appendingPathComponent(backupDirectoryName)
+        } else {
+            localBackupURL = nil
+        }
+        
         checkiCloudAvailability()
+        
+        // If iCloud is not properly configured, use local storage
+        if containerURL == nil && localBackupURL != nil {
+            useLocalStorage = true
+            logger.info("iCloud container not available, will use local storage for backups")
+        }
         
         if let lastBackup = UserDefaults.standard.object(forKey: "lastPlantCareBackupDate") as? Date {
             lastBackupDate = lastBackup
@@ -58,20 +89,32 @@ class BackupService: ObservableObject {
     private func checkiCloudAvailability() {
         if let token = FileManager.default.ubiquityIdentityToken {
             iCloudAvailable = true
-            logger.info("iCloud is available")
+            logger.info("iCloud is available with token")
+            
+            // Additional diagnostics
+            if containerURL == nil {
+                logger.error("iCloud token exists but container URL is nil - check entitlements")
+            }
         } else {
             iCloudAvailable = false
-            logger.warning("iCloud is not available")
+            logger.warning("iCloud is not available - no ubiquity token")
         }
     }
     
     private var backupDirectory: URL? {
-        guard let containerURL = containerURL else { return nil }
-        return containerURL.appendingPathComponent("Documents").appendingPathComponent(backupDirectoryName)
+        if let containerURL = containerURL {
+            return containerURL.appendingPathComponent("Documents").appendingPathComponent(backupDirectoryName)
+        } else if useLocalStorage, let localURL = localBackupURL {
+            logger.info("Using local storage for backups")
+            return localURL
+        } else {
+            logger.error("No backup directory available - neither iCloud nor local storage")
+            return nil
+        }
     }
     
     func performBackup(dataStore: DataStore) async throws {
-        guard iCloudAvailable else {
+        guard iCloudAvailable || useLocalStorage else {
             throw BackupError.iCloudNotAvailable
         }
         
@@ -109,7 +152,12 @@ class BackupService: ObservableObject {
         let fileName = "PlantCare_Backup_\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short).replacingOccurrences(of: "/", with: "-").replacingOccurrences(of: ":", with: "-")).\(fileExtension)"
         
         guard let backupDir = backupDirectory else {
-            throw BackupError.invalidDirectory
+            logger.error("Backup directory is nil - checking iCloud availability: \(self.iCloudAvailable)")
+            if !self.iCloudAvailable {
+                throw BackupError.iCloudNotAvailable
+            } else {
+                throw BackupError.invalidDirectory
+            }
         }
         
         try FileManager.default.createDirectory(at: backupDir, withIntermediateDirectories: true)
@@ -139,7 +187,7 @@ class BackupService: ObservableObject {
     }
     
     func restoreFromBackup(at url: URL, context dataStore: DataStore) async throws {
-        guard iCloudAvailable else {
+        guard iCloudAvailable || useLocalStorage else {
             throw BackupError.iCloudNotAvailable
         }
         

@@ -170,6 +170,7 @@ struct Plant: Identifiable, Codable {
     var id: UUID = UUID()
     var name: String
     var latinName: String?
+    var visualDescription: String?
     var assignedRoomID: UUID?
     var assignedZoneID: UUID?
     var assignedWindowID: UUID?

@@ -121,10 +121,12 @@ struct RoomDetailView: View {
         .sheet(isPresented: $showingMoveSheet) {
             if let plant = plantToMove {
                 MovePlantSheet(plant: plant)
+                    .environmentObject(dataStore)
             }
         }
         .sheet(isPresented: $showingAddPlantsSheet) {
             AddPlantsToSpaceView(targetRoom: room, targetZone: nil)
+                .environmentObject(dataStore)
         }
     }
     
@@ -262,6 +264,17 @@ struct PlantRowContent: View {
                     }
                 }
                 .foregroundColor(.secondary)
+                
+                if let visualDescription = plant.visualDescription, !visualDescription.isEmpty {
+                    HStack(spacing: 4) {
+                        Image(systemName: "eye")
+                            .font(.caption2)
+                        Text(visualDescription)
+                            .font(.caption)
+                            .lineLimit(1)
+                    }
+                    .foregroundColor(.secondary)
+                }
             }
             Spacer()
             if let wateringStep = plant.wateringStep,

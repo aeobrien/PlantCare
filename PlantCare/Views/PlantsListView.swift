@@ -244,6 +244,7 @@ struct AddPlantView: View {
     
     @State private var plantName = ""
     @State private var latinName = ""
+    @State private var visualDescription = ""
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -264,6 +265,8 @@ struct AddPlantView: View {
                 Section(header: Text("Plant Information")) {
                     TextField("Plant Name", text: $plantName)
                     TextField("Latin Name (optional)", text: $latinName)
+                    TextField("Visual Description (optional)", text: $visualDescription, axis: .vertical)
+                        .lineLimit(2...4)
                     
                     Picker("Light Type", selection: $lightType) {
                         ForEach(LightType.allCases, id: \.self) { type in
@@ -363,6 +366,7 @@ struct AddPlantView: View {
         var newPlant = Plant(
             name: plantName,
             latinName: latinName.isEmpty ? nil : latinName,
+            visualDescription: visualDescription.isEmpty ? nil : visualDescription,
             assignedRoomID: selectedRoomID,
             assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,

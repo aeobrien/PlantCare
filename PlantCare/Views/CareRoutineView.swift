@@ -307,6 +307,24 @@ struct PlantCareSection: View {
                 showingImagePicker: $showingImagePicker
             )
             
+            // Show visual description if available
+            if let visualDescription = plant.visualDescription, !visualDescription.isEmpty {
+                HStack(spacing: 8) {
+                    Image(systemName: "eye")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(visualDescription)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemGray5).opacity(0.5))
+                .cornerRadius(8)
+            }
+            
             VStack(spacing: 8) {
                 ForEach(plant.enabledCareSteps) { careStep in
                     CareStepCard(

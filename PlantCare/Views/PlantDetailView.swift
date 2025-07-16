@@ -40,6 +40,23 @@ struct PlantDetailView: View {
                             .padding(.top, -10)
                     }
                     
+                    // Show visual description if available
+                    if let visualDescription = plant.visualDescription, !visualDescription.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Label("Visual Description", systemImage: "eye")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(visualDescription)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                        .padding(.horizontal)
+                    }
+                    
                     VStack(alignment: .leading, spacing: 16) {
                         SectionHeader(title: "Location & Light")
                     
@@ -394,6 +411,7 @@ struct EditPlantView: View {
     
     @State private var plantName: String = ""
     @State private var latinName: String = ""
+    @State private var visualDescription: String = ""
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -421,6 +439,8 @@ struct EditPlantView: View {
                 Section(header: Text("Plant Information")) {
                     TextField("Common Name", text: $plantName)
                     TextField("Latin Name (optional)", text: $latinName)
+                    TextField("Visual Description (optional)", text: $visualDescription, axis: .vertical)
+                        .lineLimit(2...4)
                     
                     Picker("Light Type", selection: $lightType) {
                         ForEach(LightType.allCases, id: \.self) { type in
@@ -552,6 +572,7 @@ struct EditPlantView: View {
             .onAppear {
                 plantName = plant.name
                 latinName = plant.latinName ?? ""
+                visualDescription = plant.visualDescription ?? ""
                 selectedRoomID = plant.assignedRoomID
                 selectedZoneID = plant.assignedZoneID
                 selectedWindowID = plant.assignedWindowID
@@ -568,6 +589,7 @@ struct EditPlantView: View {
     func saveChanges() {
         plant.name = plantName
         plant.latinName = latinName.isEmpty ? nil : latinName
+        plant.visualDescription = visualDescription.isEmpty ? nil : visualDescription
         plant.assignedRoomID = selectedRoomID
         plant.assignedZoneID = selectedZoneID
         plant.assignedWindowID = selectedWindowID

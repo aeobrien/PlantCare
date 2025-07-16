@@ -9,6 +9,7 @@ struct RoomDetailView: View {
     @State private var newWindowNotes = ""
     @State private var showingMoveSheet = false
     @State private var plantToMove: Plant?
+    @State private var showingAddPlantsSheet = false
     
     var plantsInRoom: [Plant] {
         dataStore.plantsInRoom(room)
@@ -89,6 +90,15 @@ struct RoomDetailView: View {
                         .listStyle(.plain)
                         .frame(height: CGFloat(plantsInRoom.count) * 100)
                     }
+                    
+                    Button(action: { showingAddPlantsSheet = true }) {
+                        Label("Add/Move Plants Here", systemImage: "plus.circle")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor.opacity(0.1))
+                            .foregroundColor(.accentColor)
+                            .cornerRadius(8)
+                    }
                 }
             }
             .padding()
@@ -112,6 +122,9 @@ struct RoomDetailView: View {
             if let plant = plantToMove {
                 MovePlantSheet(plant: plant)
             }
+        }
+        .sheet(isPresented: $showingAddPlantsSheet) {
+            AddPlantsToSpaceView(targetRoom: room, targetZone: nil)
         }
     }
     

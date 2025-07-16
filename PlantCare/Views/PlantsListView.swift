@@ -6,38 +6,96 @@ struct PlantsListView: View {
     @State private var showingImport = false
     @State private var showingAIAdd = false
     @State private var searchText = ""
+    @State private var sortOption = PlantsSortOption.nameAscending
     
     var filteredPlants: [Plant] {
-        if searchText.isEmpty {
-            return dataStore.plants
-        } else {
-            return dataStore.plants.filter { 
-                $0.name.localizedCaseInsensitiveContains(searchText) 
+        let plants = searchText.isEmpty ? dataStore.plants : dataStore.plants.filter { 
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            ($0.latinName?.localizedCaseInsensitiveContains(searchText) ?? false)
+        }
+        return plants.sorted(by: sortOption, dataStore: dataStore)
+    }
+    
+    var isGroupedBySpace: Bool {
+        sortOption == .groupBySpaceAscending || sortOption == .groupBySpaceDescending
+    }
+    
+    var groupedPlants: [(String, [Plant])] {
+        if !isGroupedBySpace {
+            return [("", filteredPlants)]
+        }
+        
+        let grouped = Dictionary(grouping: filteredPlants) { plant in
+            dataStore.spaceNameForPlant(plant)
+        }
+        
+        return grouped.sorted { first, second in
+            if sortOption == .groupBySpaceAscending {
+                return first.key.localizedCaseInsensitiveCompare(second.key) == .orderedAscending
+            } else {
+                return first.key.localizedCaseInsensitiveCompare(second.key) == .orderedDescending
             }
         }
     }
     
     var body: some View {
         List {
-            ForEach(filteredPlants) { plant in
-                NavigationLink(destination: PlantDetailView(plantID: plant.id)) {
-                    PlantListRow(plant: plant)
-                }
-                .swipeActions(edge: .leading) {
-                    Button {
-                        duplicatePlant(plant)
-                    } label: {
-                        Label("Duplicate", systemImage: "doc.on.doc")
+            ForEach(groupedPlants, id: \.0) { spaceName, plants in
+                if isGroupedBySpace {
+                    Section(header: Text(spaceName)
+                        .font(.headline)
+                        .foregroundColor(.primary)) {
+                        ForEach(plants) { plant in
+                            NavigationLink(destination: PlantDetailView(plantID: plant.id)) {
+                                PlantListRow(plant: plant)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    duplicatePlant(plant)
+                                } label: {
+                                    Label("Duplicate", systemImage: "doc.on.doc")
+                                }
+                                .tint(.blue)
+                            }
+                        }
+                        .onDelete { offsets in
+                            deletePlantsInGroup(plants: plants, at: offsets)
+                        }
                     }
-                    .tint(.blue)
+                } else {
+                    ForEach(plants) { plant in
+                        NavigationLink(destination: PlantDetailView(plantID: plant.id)) {
+                            PlantListRow(plant: plant)
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                duplicatePlant(plant)
+                            } label: {
+                                Label("Duplicate", systemImage: "doc.on.doc")
+                            }
+                            .tint(.blue)
+                        }
+                    }
+                    .onDelete(perform: deletePlants)
                 }
             }
-            .onDelete(perform: deletePlants)
         }
         .searchable(text: $searchText, prompt: "Search plants")
         .navigationTitle("Plants")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Menu {
+                    Picker("Sort By", selection: $sortOption) {
+                        ForEach(PlantsSortOption.allCases, id: \.self) { option in
+                            Label(option.rawValue, systemImage: option.systemImageName)
+                                .tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {
@@ -74,7 +132,19 @@ struct PlantsListView: View {
     }
     
     func deletePlants(at offsets: IndexSet) {
-        dataStore.deletePlant(at: offsets)
+        for offset in offsets {
+            if let plant = filteredPlants[safe: offset] {
+                dataStore.deletePlant(plant)
+            }
+        }
+    }
+    
+    func deletePlantsInGroup(plants: [Plant], at offsets: IndexSet) {
+        for offset in offsets {
+            if let plant = plants[safe: offset] {
+                dataStore.deletePlant(plant)
+            }
+        }
     }
     
     func duplicatePlant(_ plant: Plant) {
@@ -173,6 +243,7 @@ struct AddPlantView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var plantName = ""
+    @State private var latinName = ""
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -192,6 +263,7 @@ struct AddPlantView: View {
             Form {
                 Section(header: Text("Plant Information")) {
                     TextField("Plant Name", text: $plantName)
+                    TextField("Latin Name (optional)", text: $latinName)
                     
                     Picker("Light Type", selection: $lightType) {
                         ForEach(LightType.allCases, id: \.self) { type in
@@ -290,6 +362,7 @@ struct AddPlantView: View {
     func savePlant() {
         var newPlant = Plant(
             name: plantName,
+            latinName: latinName.isEmpty ? nil : latinName,
             assignedRoomID: selectedRoomID,
             assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,

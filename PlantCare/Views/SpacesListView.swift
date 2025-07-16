@@ -6,11 +6,38 @@ struct SpacesListView: View {
     @State private var showingAddRoom = false
     @State private var showingAddZone = false
     @State private var editMode = EditMode.inactive
+    @State private var sortOption = SpacesSortOption.nameAscending
+    
+    var sortedRooms: [Room] {
+        switch sortOption {
+        case .nameAscending:
+            return dataStore.rooms.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        case .nameDescending:
+            return dataStore.rooms.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedDescending }
+        case .mostPlants:
+            return dataStore.rooms.sorted { dataStore.plantsInRoom($0).count > dataStore.plantsInRoom($1).count }
+        case .fewestPlants:
+            return dataStore.rooms.sorted { dataStore.plantsInRoom($0).count < dataStore.plantsInRoom($1).count }
+        }
+    }
+    
+    var sortedZones: [Zone] {
+        switch sortOption {
+        case .nameAscending:
+            return dataStore.zones.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        case .nameDescending:
+            return dataStore.zones.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedDescending }
+        case .mostPlants:
+            return dataStore.zones.sorted { dataStore.plantsInZone($0).count > dataStore.plantsInZone($1).count }
+        case .fewestPlants:
+            return dataStore.zones.sorted { dataStore.plantsInZone($0).count < dataStore.plantsInZone($1).count }
+        }
+    }
     
     var body: some View {
         List {
             Section("Indoor Spaces") {
-                ForEach(dataStore.rooms) { room in
+                ForEach(sortedRooms) { room in
                     NavigationLink(destination: RoomDetailView(room: room)) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -47,7 +74,7 @@ struct SpacesListView: View {
             }
             
             Section("Outdoor Zones") {
-                ForEach(dataStore.zones) { zone in
+                ForEach(sortedZones) { zone in
                     NavigationLink(destination: ZoneDetailView(zone: zone)) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -94,7 +121,21 @@ struct SpacesListView: View {
         .navigationTitle("Spaces")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            EditButton()
+            ToolbarItem(placement: .navigationBarLeading) {
+                Menu {
+                    Picker("Sort By", selection: $sortOption) {
+                        ForEach(SpacesSortOption.allCases, id: \.self) { option in
+                            Label(option.rawValue, systemImage: option.systemImageName)
+                                .tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down.circle")
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()
+            }
         }
         .environment(\.editMode, $editMode)
         .sheet(isPresented: $showingAddRoom) {

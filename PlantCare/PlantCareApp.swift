@@ -11,6 +11,7 @@ import SwiftUI
 struct PlantCareApp: App {
     @StateObject private var dataStore = DataStore.shared
     @StateObject private var notificationManager = NotificationManager.shared
+    @StateObject private var backupService = BackupService.shared
     
     var body: some Scene {
         WindowGroup {
@@ -19,6 +20,7 @@ struct PlantCareApp: App {
                 .environmentObject(notificationManager)
                 .task {
                     await requestNotificationPermission()
+                    backupService.scheduleAutomaticBackup()
                 }
         }
     }

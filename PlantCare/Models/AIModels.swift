@@ -2,6 +2,7 @@ import Foundation
 
 struct AIPlantResponse: Codable {
     let name: String
+    let latinName: String?
     let lightType: LightType
     let preferredLightDirection: Direction
     let humidityPreference: HumidityPreference?

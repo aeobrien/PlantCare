@@ -1,4 +1,6 @@
 import SwiftUI
+import PhotosUI
+import UIKit
 
 struct AIPlantAddView: View {
     @EnvironmentObject var dataStore: DataStore
@@ -11,6 +13,9 @@ struct AIPlantAddView: View {
     @State private var generatedPlantData: AIPlantResponse?
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var showingImagePicker = false
+    @State private var capturedImage: UIImage?
+    @State private var identifiedPlantName = ""
     
     var body: some View {
         NavigationStack {
@@ -28,12 +33,34 @@ struct AIPlantAddView: View {
                 .padding(.top, 20)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Plant Name")
-                        .font(.headline)
+                    HStack {
+                        Text("Plant Name")
+                            .font(.headline)
+                        Spacer()
+                        Button(action: {
+                            showingImagePicker = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "camera.fill")
+                                Text("Identify with Photo")
+                            }
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                        }
+                    }
                     
                     TextField("e.g., Monstera, Fiddle Leaf Fig, Snake Plant", text: $plantName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.words)
+                    
+                    if let image = capturedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 100)
+                            .cornerRadius(8)
+                            .padding(.top, 4)
+                    }
                 }
                 .padding(.horizontal)
                 
@@ -115,6 +142,14 @@ struct AIPlantAddView: View {
                     AIGeneratedAddPlantView(plantData: plantData)
                 }
             }
+            .sheet(isPresented: $showingImagePicker) {
+                ImagePicker(image: $capturedImage, sourceType: .camera)
+                    .onDisappear {
+                        if let image = capturedImage {
+                            identifyPlant(from: image)
+                        }
+                    }
+            }
         }
     }
     
@@ -146,6 +181,38 @@ struct AIPlantAddView: View {
             }
         }
     }
+    
+    func identifyPlant(from image: UIImage) {
+        isLoading = true
+        errorMessage = ""
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            errorMessage = "Failed to process image"
+            showingError = true
+            isLoading = false
+            return
+        }
+        
+        Task {
+            do {
+                let identifiedName = try await OpenAIService.shared.identifyPlant(
+                    from: imageData,
+                    apiKey: dataStore.settings.openAIAPIKey
+                )
+                
+                await MainActor.run {
+                    self.plantName = identifiedName
+                    self.isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorMessage = error.localizedDescription
+                    self.showingError = true
+                    self.isLoading = false
+                }
+            }
+        }
+    }
 }
 
 struct AIGeneratedAddPlantView: View {
@@ -155,6 +222,7 @@ struct AIGeneratedAddPlantView: View {
     let plantData: AIPlantResponse
     
     @State private var plantName: String
+    @State private var latinName: String
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -167,6 +235,7 @@ struct AIGeneratedAddPlantView: View {
     init(plantData: AIPlantResponse) {
         self.plantData = plantData
         self._plantName = State(initialValue: plantData.name)
+        self._latinName = State(initialValue: plantData.latinName ?? "")
         self._preferredLightDirection = State(initialValue: plantData.preferredLightDirection)
         self._lightType = State(initialValue: plantData.lightType)
         self._generalNotes = State(initialValue: plantData.generalNotes)
@@ -219,18 +288,46 @@ struct AIGeneratedAddPlantView: View {
         NavigationStack {
             Form {
                 Section(header: Text("Plant Information")) {
-                    TextField("Plant Name", text: $plantName)
-                    
-                    Picker("Light Type", selection: $lightType) {
-                        ForEach(LightType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Common Name")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            TextField("Common Name", text: $plantName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Latin Name")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            TextField("Latin Name (optional)", text: $latinName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                     }
                     
-                    Picker("Preferred Light Direction", selection: $preferredLightDirection) {
-                        ForEach(Direction.allCases, id: \.self) { direction in
-                            Text(direction.rawValue).tag(direction)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Light Type")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Picker("Light Type", selection: $lightType) {
+                            ForEach(LightType.allCases, id: \.self) { type in
+                                Text(type.rawValue).tag(type)
+                            }
                         }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Preferred Light Direction")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Picker("Preferred Light Direction", selection: $preferredLightDirection) {
+                            ForEach(Direction.allCases, id: \.self) { direction in
+                                Text(direction.rawValue).tag(direction)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
                     }
                 }
                 
@@ -352,37 +449,57 @@ struct AIGeneratedAddPlantView: View {
                 }
                 
                 Section(header: Text("Environment")) {
-                    Picker("Humidity Preference", selection: $humidityPreference) {
-                        ForEach(HumidityPreference.allCases, id: \.self) { pref in
-                            Text(pref.rawValue).tag(pref)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Humidity Preference")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Picker("Humidity Preference", selection: $humidityPreference) {
+                            ForEach(HumidityPreference.allCases, id: \.self) { pref in
+                                Text(pref.rawValue).tag(pref)
+                            }
                         }
+                        .pickerStyle(MenuPickerStyle())
                     }
                 }
                 
                 Section(header: Text("Care Steps")) {
                     ForEach(careSteps) { step in
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Image(systemName: step.type.systemImageName)
                                     .foregroundColor(.accentColor)
                                 Text(step.displayName)
                                     .font(.headline)
                                 Spacer()
-                                Text("Every \(step.frequencyDays) days")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    Text("Frequency")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                    Text("Every \(step.frequencyDays) days")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                }
                             }
-                            Text(step.instructions)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Instructions")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                                Text(step.instructions)
+                                    .font(.caption)
+                            }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 8)
                     }
                 }
                 
                 Section(header: Text("General Notes")) {
-                    TextEditor(text: $generalNotes)
-                        .frame(height: 80)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("AI-Generated Care Notes")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        TextEditor(text: $generalNotes)
+                            .frame(height: 80)
+                    }
                 }
             }
             .navigationTitle("Add Plant")
@@ -405,13 +522,16 @@ struct AIGeneratedAddPlantView: View {
     
     func savePlant() {
         var newPlant = Plant(
+            id: UUID(),
             name: plantName,
+            latinName: latinName.isEmpty ? nil : latinName,
             assignedRoomID: selectedRoomID,
             assignedZoneID: selectedZoneID,
             assignedWindowID: selectedWindowID,
             preferredLightDirection: preferredLightDirection,
             lightType: lightType,
             generalNotes: generalNotes,
+            careSteps: [],
             humidityPreference: humidityPreference
         )
         

@@ -14,9 +14,14 @@ struct AIPlantQuestionView: View {
     @State private var showingReview = false
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedPhotoData: Data?
+    @State private var selectedTimelinePhotoID: UUID?
     @State private var showingPhotoPreview = false
     
     @FocusState private var isQuestionFocused: Bool
+    
+    var plantPhotos: [PlantPhoto] {
+        dataStore.photos(for: plant.id).prefix(5).map { $0 }
+    }
     
     var body: some View {
         NavigationStack {
@@ -50,13 +55,37 @@ struct AIPlantQuestionView: View {
                                     
                                     Spacer()
                                     
-                                    if selectedPhotoData != nil {
+                                    if selectedPhotoData != nil || selectedTimelinePhotoID != nil {
                                         Button("Remove Photo") {
                                             selectedPhoto = nil
                                             selectedPhotoData = nil
+                                            selectedTimelinePhotoID = nil
                                         }
                                         .font(.caption)
                                         .foregroundColor(.red)
+                                    }
+                                }
+                                
+                                // Show recent photos from timeline
+                                if !plantPhotos.isEmpty {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text("Or select from recent photos:")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        
+                                        ScrollView(.horizontal, showsIndicators: false) {
+                                            HStack(spacing: 12) {
+                                                ForEach(plantPhotos) { photo in
+                                                    TimelinePhotoThumbnail(
+                                                        photo: photo,
+                                                        isSelected: selectedTimelinePhotoID == photo.id
+                                                    )
+                                                    .onTapGesture {
+                                                        selectTimelinePhoto(photo)
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                                 
@@ -238,7 +267,54 @@ struct AIPlantQuestionView: View {
         aiResponse = nil
         selectedPhoto = nil
         selectedPhotoData = nil
+        selectedTimelinePhotoID = nil
         isQuestionFocused = true
+    }
+    
+    func selectTimelinePhoto(_ photo: PlantPhoto) {
+        selectedTimelinePhotoID = photo.id
+        selectedPhoto = nil
+        
+        // Load the photo data
+        if let url = photo.imageURL,
+           let imageData = try? Data(contentsOf: url) {
+            selectedPhotoData = imageData
+        }
+    }
+}
+
+struct TimelinePhotoThumbnail: View {
+    let photo: PlantPhoto
+    let isSelected: Bool
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            if let url = photo.imageURL,
+               let uiImage = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 60, height: 60)
+                    .clipped()
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
+                    )
+            } else {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 60, height: 60)
+                    .overlay(
+                        Image(systemName: "photo")
+                            .foregroundColor(.gray)
+                    )
+            }
+            
+            Text(photo.dateTaken, format: .dateTime.month().day())
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
     }
 }
 

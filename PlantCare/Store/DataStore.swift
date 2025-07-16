@@ -7,12 +7,14 @@ class DataStore: ObservableObject {
     @Published var rooms: [Room] = []
     @Published var zones: [Zone] = []
     @Published var plants: [Plant] = []
+    @Published var plantPhotos: [PlantPhoto] = []
     @Published var currentCareSession: CareSession?
     @Published var settings: AppSettings = AppSettings()
     
     private let roomsKey = "savedRooms"
     private let zonesKey = "savedZones"
     private let plantsKey = "savedPlants"
+    private let photosKey = "savedPhotos"
     private let settingsKey = "appSettings"
     
     init() {
@@ -60,6 +62,11 @@ class DataStore: ObservableObject {
         if let settingsData = UserDefaults.standard.data(forKey: settingsKey),
            let decodedSettings = try? JSONDecoder().decode(AppSettings.self, from: settingsData) {
             self.settings = decodedSettings
+        }
+        
+        if let photosData = UserDefaults.standard.data(forKey: photosKey),
+           let decodedPhotos = try? JSONDecoder().decode([PlantPhoto].self, from: photosData) {
+            self.plantPhotos = decodedPhotos
         }
     }
     
@@ -122,6 +129,10 @@ class DataStore: ObservableObject {
         
         if let encodedSettings = try? JSONEncoder().encode(settings) {
             UserDefaults.standard.set(encodedSettings, forKey: settingsKey)
+        }
+        
+        if let encodedPhotos = try? JSONEncoder().encode(plantPhotos) {
+            UserDefaults.standard.set(encodedPhotos, forKey: photosKey)
         }
     }
     
@@ -436,8 +447,26 @@ class DataStore: ObservableObject {
     }
     
     func deletePlant(at offsets: IndexSet) {
+        // Get plant IDs before deletion
+        let plantIDsToDelete = offsets.map { plants[$0].id }
+        
+        // Delete the plants
         plants.remove(atOffsets: offsets)
+        
+        // Delete associated photos from storage and array
+        for plantID in plantIDsToDelete {
+            deleteAllPhotos(for: plantID)
+        }
+        
         saveData()
+    }
+    
+    func deletePlant(_ plant: Plant) {
+        if let index = plants.firstIndex(where: { $0.id == plant.id }) {
+            plants.remove(at: index)
+            deleteAllPhotos(for: plant.id)
+            saveData()
+        }
     }
     
     func startCareSession() {
@@ -550,5 +579,47 @@ class DataStore: ObservableObject {
         return zones
             .filter { zone in plantsInZone(zone).count > 0 }
             .sorted(by: { $0.orderIndex < $1.orderIndex })
+    }
+    
+    // MARK: - Photo Management
+    
+    func addPhoto(_ photo: PlantPhoto, imageData: Data) {
+        // Save image to documents directory
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let photosDirectory = documentsPath.appendingPathComponent("PlantPhotos")
+        
+        // Create directory if it doesn't exist
+        try? FileManager.default.createDirectory(at: photosDirectory, withIntermediateDirectories: true)
+        
+        // Save image file
+        let imageURL = photosDirectory.appendingPathComponent(photo.fileName)
+        try? imageData.write(to: imageURL)
+        
+        // Add to array and save
+        plantPhotos.append(photo)
+        saveData()
+    }
+    
+    func deletePhoto(_ photo: PlantPhoto) {
+        // Delete image file
+        if let imageURL = photo.imageURL {
+            try? FileManager.default.removeItem(at: imageURL)
+        }
+        
+        // Remove from array
+        plantPhotos.removeAll { $0.id == photo.id }
+        saveData()
+    }
+    
+    func deleteAllPhotos(for plantID: UUID) {
+        let photosToDelete = plantPhotos.filter { $0.plantID == plantID }
+        for photo in photosToDelete {
+            deletePhoto(photo)
+        }
+    }
+    
+    func photos(for plantID: UUID) -> [PlantPhoto] {
+        plantPhotos.filter { $0.plantID == plantID }
+            .sorted { $0.dateTaken > $1.dateTaken }
     }
 }

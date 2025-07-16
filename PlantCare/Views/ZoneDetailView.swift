@@ -6,6 +6,7 @@ struct ZoneDetailView: View {
     @State private var isEditingZone = false
     @State private var selectedPlant: Plant?
     @State private var showingMovePlant = false
+    @State private var showingAddPlantsSheet = false
     
     var plants: [Plant] {
         dataStore.plantsInZone(zone)
@@ -102,6 +103,16 @@ struct ZoneDetailView: View {
                     }
                 }
             }
+            
+            Button(action: { showingAddPlantsSheet = true }) {
+                Label("Add/Move Plants Here", systemImage: "plus.circle")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor.opacity(0.1))
+                    .foregroundColor(.accentColor)
+                    .cornerRadius(8)
+            }
+            .padding(.horizontal)
         }
     }
     
@@ -127,6 +138,10 @@ struct ZoneDetailView: View {
         }
         .sheet(item: $selectedPlant) { plant in
             MovePlantSheet(plant: plant)
+        }
+        .sheet(isPresented: $showingAddPlantsSheet) {
+            AddPlantsToSpaceView(targetRoom: nil, targetZone: zone)
+                .environmentObject(dataStore)
         }
     }
 }

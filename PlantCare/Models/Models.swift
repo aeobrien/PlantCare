@@ -169,6 +169,7 @@ enum SpacePlacementPreference: String, CaseIterable {
 struct Plant: Identifiable, Codable {
     var id: UUID = UUID()
     var name: String
+    var latinName: String?
     var assignedRoomID: UUID?
     var assignedZoneID: UUID?
     var assignedWindowID: UUID?
@@ -229,6 +230,19 @@ struct Plant: Identifiable, Codable {
         if let index = careSteps.firstIndex(where: { $0.id == id }) {
             careSteps[index].lastCompletedDate = date
         }
+    }
+}
+
+struct PlantPhoto: Identifiable, Codable {
+    var id: UUID = UUID()
+    var plantID: UUID
+    var dateTaken: Date
+    var fileName: String  // Reference to the image file stored in documents
+    var notes: String?
+    
+    var imageURL: URL? {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        return documentsPath?.appendingPathComponent("PlantPhotos").appendingPathComponent(fileName)
     }
 }
 

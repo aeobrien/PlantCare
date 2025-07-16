@@ -1,29 +1,68 @@
 import SwiftUI
+import UIKit
 
 struct CareRoutineView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
-    @State private var currentRoomIndex = 0
+    @State private var currentSpaceIndex = 0
     @State private var completedCareSteps: Set<String> = []
     @State private var showingCompletion = false
     
-    var sortedRooms: [Room] {
-        dataStore.orderedRoomsForCareRoutine()
+    enum SpaceType {
+        case room(Room)
+        case zone(Zone)
+        
+        var name: String {
+            switch self {
+            case .room(let room): return room.name
+            case .zone(let zone): return zone.name
+            }
+        }
+        
+        var isIndoor: Bool {
+            switch self {
+            case .room: return true
+            case .zone: return false
+            }
+        }
     }
     
-    var currentRoom: Room? {
-        guard currentRoomIndex < sortedRooms.count else { return nil }
-        return sortedRooms[currentRoomIndex]
+    var allSpaces: [SpaceType] {
+        let roomSpaces = dataStore.orderedRoomsForCareRoutine()
+            .filter { dataStore.plantsInRoom($0).count > 0 }
+            .map { SpaceType.room($0) }
+        let zoneSpaces = dataStore.zones
+            .filter { dataStore.plantsInZone($0).count > 0 }
+            .sorted(by: { $0.orderIndex < $1.orderIndex })
+            .map { SpaceType.zone($0) }
+        return roomSpaces + zoneSpaces
     }
     
-    var plantsInCurrentRoom: [Plant] {
-        guard let room = currentRoom else { return [] }
-        return dataStore.plantsInRoom(room)
+    var currentSpace: SpaceType? {
+        guard currentSpaceIndex < allSpaces.count else { return nil }
+        return allSpaces[currentSpaceIndex]
+    }
+    
+    var plantsInCurrentSpace: [Plant] {
+        guard let space = currentSpace else { return [] }
+        switch space {
+        case .room(let room):
+            return dataStore.plantsInRoom(room)
+        case .zone(let zone):
+            return dataStore.plantsInZone(zone)
+        }
     }
     
     var totalCareSteps: Int {
-        sortedRooms.reduce(0) { total, room in
-            total + dataStore.plantsInRoom(room).reduce(0) { plantTotal, plant in
+        allSpaces.reduce(0) { total, space in
+            let plants: [Plant]
+            switch space {
+            case .room(let room):
+                plants = dataStore.plantsInRoom(room)
+            case .zone(let zone):
+                plants = dataStore.plantsInZone(zone)
+            }
+            return total + plants.reduce(0) { plantTotal, plant in
                 plantTotal + plant.enabledCareSteps.count
             }
         }
@@ -35,7 +74,7 @@ struct CareRoutineView: View {
     
     var body: some View {
         NavigationStack {
-            if sortedRooms.isEmpty {
+            if allSpaces.isEmpty {
                 EmptyRoutineView()
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
@@ -56,21 +95,21 @@ struct CareRoutineView: View {
                         }
                     }
                 }
-            } else if let room = currentRoom {
+            } else if let space = currentSpace {
                 VStack(spacing: 0) {
                     ProgressHeader(
-                        currentRoom: currentRoomIndex + 1,
-                        totalRooms: sortedRooms.count,
+                        currentSpace: currentSpaceIndex + 1,
+                        totalSpaces: allSpaces.count,
                         completedCareSteps: completedCareSteps.count,
                         totalCareSteps: totalCareSteps
                     )
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
-                            RoomHeader(room: room)
+                            SpaceHeader(space: space)
                             
                             VStack(spacing: 12) {
-                                ForEach(plantsInCurrentRoom) { plant in
+                                ForEach(plantsInCurrentSpace) { plant in
                                     PlantCareSection(
                                         plant: plant,
                                         completedCareSteps: completedCareSteps,
@@ -86,10 +125,10 @@ struct CareRoutineView: View {
                     }
                     
                     NavigationControls(
-                        canGoBack: currentRoomIndex > 0,
-                        canGoNext: currentRoomIndex < sortedRooms.count - 1,
-                        onBack: previousRoom,
-                        onNext: nextRoom,
+                        canGoBack: currentSpaceIndex > 0,
+                        canGoNext: currentSpaceIndex < allSpaces.count - 1,
+                        onBack: previousSpace,
+                        onNext: nextSpace,
                         onComplete: completeRoutine
                     )
                 }
@@ -121,15 +160,15 @@ struct CareRoutineView: View {
         }
     }
     
-    func previousRoom() {
+    func previousSpace() {
         withAnimation {
-            currentRoomIndex = max(0, currentRoomIndex - 1)
+            currentSpaceIndex = max(0, currentSpaceIndex - 1)
         }
     }
     
-    func nextRoom() {
+    func nextSpace() {
         withAnimation {
-            currentRoomIndex = min(sortedRooms.count - 1, currentRoomIndex + 1)
+            currentSpaceIndex = min(allSpaces.count - 1, currentSpaceIndex + 1)
         }
     }
     
@@ -161,7 +200,7 @@ struct EmptyRoutineView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Text("Add plants to your rooms to start your care routine")
+            Text("Add plants to your rooms or outdoor zones to start your care routine")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -172,8 +211,8 @@ struct EmptyRoutineView: View {
 }
 
 struct ProgressHeader: View {
-    let currentRoom: Int
-    let totalRooms: Int
+    let currentSpace: Int
+    let totalSpaces: Int
     let completedCareSteps: Int
     let totalCareSteps: Int
     
@@ -184,7 +223,7 @@ struct ProgressHeader: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Room \(currentRoom) of \(totalRooms)")
+                Text("Space \(currentSpace) of \(totalSpaces)")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
@@ -203,20 +242,37 @@ struct ProgressHeader: View {
     }
 }
 
-struct RoomHeader: View {
-    let room: Room
+struct SpaceHeader: View {
+    let space: CareRoutineView.SpaceType
     @EnvironmentObject var dataStore: DataStore
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(room.name)
-                .font(.largeTitle)
-                .fontWeight(.bold)
+            HStack {
+                Text(space.name)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                if !space.isIndoor {
+                    Image(systemName: "sun.max")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+                }
+            }
             
             HStack {
-                Label("\(dataStore.plantsInRoom(room).count) plants", systemImage: "leaf")
-                Text("•")
-                Label("\(room.windows.count) windows", systemImage: "window.ceiling")
+                switch space {
+                case .room(let room):
+                    Label("\(dataStore.plantsInRoom(room).count) plants", systemImage: "leaf")
+                    Text("•")
+                    Label("\(room.windows.count) windows", systemImage: "window.ceiling")
+                case .zone(let zone):
+                    Label("\(dataStore.plantsInZone(zone).count) plants", systemImage: "leaf")
+                    Text("•")
+                    Label(zone.aspect.rawValue, systemImage: "location")
+                    Text("•")
+                    Label(zone.sunPeriod.rawValue, systemImage: "sun.max")
+                }
             }
             .font(.subheadline)
             .foregroundColor(.secondary)
@@ -231,6 +287,8 @@ struct PlantCareSection: View {
     let onToggleCareStep: (CareStep) -> Void
     @EnvironmentObject var dataStore: DataStore
     @State private var showingAIQuestion = false
+    @State private var showingImagePicker = false
+    @State private var capturedImage: UIImage?
     
     var window: Window? {
         dataStore.windowForPlant(plant)
@@ -242,7 +300,12 @@ struct PlantCareSection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            PlantHeader(plant: plant, window: window, showingAIQuestion: $showingAIQuestion)
+            PlantHeader(
+                plant: plant,
+                window: window,
+                showingAIQuestion: $showingAIQuestion,
+                showingImagePicker: $showingImagePicker
+            )
             
             VStack(spacing: 8) {
                 ForEach(plant.enabledCareSteps) { careStep in
@@ -270,6 +333,28 @@ struct PlantCareSection: View {
             AIPlantQuestionView(plant: plant)
                 .environmentObject(dataStore)
         }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $capturedImage, sourceType: .camera)
+                .onDisappear {
+                    if let image = capturedImage {
+                        savePhoto(image)
+                        capturedImage = nil
+                    }
+                }
+        }
+    }
+    
+    func savePhoto(_ image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        
+        let photo = PlantPhoto(
+            plantID: plant.id,
+            dateTaken: Date(),
+            fileName: "\(UUID().uuidString).jpg",
+            notes: nil
+        )
+        
+        dataStore.addPhoto(photo, imageData: imageData)
     }
 }
 
@@ -277,6 +362,7 @@ struct PlantHeader: View {
     let plant: Plant
     let window: Window?
     @Binding var showingAIQuestion: Bool
+    @Binding var showingImagePicker: Bool
     
     var body: some View {
         HStack {
@@ -299,6 +385,14 @@ struct PlantHeader: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(.orange)
                         .font(.title3)
+                }
+                
+                Button(action: {
+                    showingImagePicker = true
+                }) {
+                    Image(systemName: "camera")
+                        .font(.title3)
+                        .foregroundColor(.green)
                 }
                 
                 Button(action: {

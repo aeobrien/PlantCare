@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct PlantDetailView: View {
     @EnvironmentObject var dataStore: DataStore
@@ -29,6 +30,16 @@ struct PlantDetailView: View {
         if let plant = plant {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    // Show Latin name if available
+                    if let latinName = plant.latinName, !latinName.isEmpty {
+                        Text(latinName)
+                            .font(.subheadline)
+                            .italic()
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                            .padding(.top, -10)
+                    }
+                    
                     VStack(alignment: .leading, spacing: 16) {
                         SectionHeader(title: "Location & Light")
                     
@@ -158,13 +169,25 @@ struct PlantDetailView: View {
                     }
                 }
                 
-                if let wateringStep = plant.wateringStep {
-                    Button(action: {
-                        markWateringStepCompleted()
-                    }) {
+                // Photo Timeline Section
+                PhotoTimelineSection(plant: plant)
+                
+                if !plant.enabledCareSteps.isEmpty {
+                    Menu {
+                        ForEach(plant.enabledCareSteps) { careStep in
+                            Button(action: {
+                                markCareStepCompleted(careStep)
+                            }) {
+                                Label(
+                                    "Record \(careStep.displayName)",
+                                    systemImage: careStep.type.systemImageName
+                                )
+                            }
+                        }
+                    } label: {
                         HStack {
-                            Image(systemName: "drop.fill")
-                            Text("Mark as Watered")
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Record Care")
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -228,12 +251,10 @@ struct PlantDetailView: View {
         }
     }
     
-    func markWateringStepCompleted() {
+    func markCareStepCompleted(_ careStep: CareStep) {
         guard var plant = plant else { return }
-        if let wateringStep = plant.wateringStep {
-            plant.markCareStepCompleted(withId: wateringStep.id)
-            dataStore.updatePlant(plant)
-        }
+        plant.markCareStepCompleted(withId: careStep.id)
+        dataStore.updatePlant(plant)
     }
     
     func duplicatePlant() {
@@ -372,6 +393,7 @@ struct EditPlantView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var plantName: String = ""
+    @State private var latinName: String = ""
     @State private var selectedRoomID: UUID?
     @State private var selectedZoneID: UUID?
     @State private var selectedWindowID: UUID?
@@ -381,6 +403,7 @@ struct EditPlantView: View {
     @State private var humidityPreference: HumidityPreference = .medium
     @State private var careSteps: [CareStep] = []
     @State private var showingAddCareStep = false
+    @State private var isIndoor: Bool = true
     
     var selectedRoom: Room? {
         guard let roomID = selectedRoomID else { return nil }
@@ -396,7 +419,8 @@ struct EditPlantView: View {
         NavigationStack {
             Form {
                 Section(header: Text("Plant Information")) {
-                    TextField("Plant Name", text: $plantName)
+                    TextField("Common Name", text: $plantName)
+                    TextField("Latin Name (optional)", text: $latinName)
                     
                     Picker("Light Type", selection: $lightType) {
                         ForEach(LightType.allCases, id: \.self) { type in
@@ -412,29 +436,52 @@ struct EditPlantView: View {
                 }
                 
                 Section(header: Text("Location")) {
-                    Picker("Room", selection: $selectedRoomID) {
-                        Text("None").tag(nil as UUID?)
-                        ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
-                            Text(room.name).tag(room.id as UUID?)
-                        }
+                    Picker("Space Type", selection: $isIndoor) {
+                        Text("Indoor").tag(true)
+                        Text("Outdoor").tag(false)
                     }
-                    .onChange(of: selectedRoomID) { newRoomID in
-                        // Auto-select window if room has only one
-                        if let roomID = newRoomID,
-                           let room = dataStore.rooms.first(where: { $0.id == roomID }),
-                           room.windows.count == 1,
-                           let window = room.windows.first {
-                            selectedWindowID = window.id
-                        } else if newRoomID == nil {
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onChange(of: isIndoor) { newValue in
+                        if newValue {
+                            selectedZoneID = nil
+                        } else {
+                            selectedRoomID = nil
                             selectedWindowID = nil
                         }
                     }
                     
-                    if let room = selectedRoom, !room.windows.isEmpty {
-                        Picker("Window", selection: $selectedWindowID) {
+                    if isIndoor {
+                        Picker("Room", selection: $selectedRoomID) {
                             Text("None").tag(nil as UUID?)
-                            ForEach(room.windows) { window in
-                                Text(window.direction.rawValue).tag(window.id as UUID?)
+                            ForEach(dataStore.rooms.sorted(by: { $0.orderIndex < $1.orderIndex })) { room in
+                                Text(room.name).tag(room.id as UUID?)
+                            }
+                        }
+                        .onChange(of: selectedRoomID) { newRoomID in
+                            // Auto-select window if room has only one
+                            if let roomID = newRoomID,
+                               let room = dataStore.rooms.first(where: { $0.id == roomID }),
+                               room.windows.count == 1,
+                               let window = room.windows.first {
+                                selectedWindowID = window.id
+                            } else if newRoomID == nil {
+                                selectedWindowID = nil
+                            }
+                        }
+                        
+                        if let room = selectedRoom, !room.windows.isEmpty {
+                            Picker("Window", selection: $selectedWindowID) {
+                                Text("None").tag(nil as UUID?)
+                                ForEach(room.windows) { window in
+                                    Text(window.direction.rawValue).tag(window.id as UUID?)
+                                }
+                            }
+                        }
+                    } else {
+                        Picker("Outdoor Zone", selection: $selectedZoneID) {
+                            Text("None").tag(nil as UUID?)
+                            ForEach(dataStore.zones.sorted(by: { $0.orderIndex < $1.orderIndex })) { zone in
+                                Text(zone.name).tag(zone.id as UUID?)
                             }
                         }
                     }
@@ -504,9 +551,11 @@ struct EditPlantView: View {
             }
             .onAppear {
                 plantName = plant.name
+                latinName = plant.latinName ?? ""
                 selectedRoomID = plant.assignedRoomID
                 selectedZoneID = plant.assignedZoneID
                 selectedWindowID = plant.assignedWindowID
+                isIndoor = plant.assignedRoomID != nil || (plant.assignedRoomID == nil && plant.assignedZoneID == nil)
                 preferredLightDirection = plant.preferredLightDirection
                 lightType = plant.lightType
                 generalNotes = plant.generalNotes
@@ -518,6 +567,7 @@ struct EditPlantView: View {
     
     func saveChanges() {
         plant.name = plantName
+        plant.latinName = latinName.isEmpty ? nil : latinName
         plant.assignedRoomID = selectedRoomID
         plant.assignedZoneID = selectedZoneID
         plant.assignedWindowID = selectedWindowID
@@ -756,6 +806,177 @@ struct EditPlantViewWrapper: View {
             .environmentObject(dataStore)
         } else {
             ContentUnavailableView("Plant Not Found", systemImage: "leaf")
+        }
+    }
+}
+
+struct PhotoTimelineSection: View {
+    let plant: Plant
+    @EnvironmentObject var dataStore: DataStore
+    @State private var selectedPhoto: PlantPhoto?
+    @State private var showingImagePicker = false
+    @State private var capturedImage: UIImage?
+    
+    var photos: [PlantPhoto] {
+        dataStore.photos(for: plant.id)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                SectionHeader(title: "Photo Timeline")
+                Spacer()
+                Button(action: {
+                    showingImagePicker = true
+                }) {
+                    Image(systemName: "camera.fill")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding(.horizontal)
+            
+            if photos.isEmpty {
+                Text("No photos yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 40)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(photos) { photo in
+                            PhotoThumbnail(photo: photo)
+                                .onTapGesture {
+                                    selectedPhoto = photo
+                                }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $capturedImage, sourceType: .camera)
+                .onDisappear {
+                    if let image = capturedImage {
+                        savePhoto(image)
+                        capturedImage = nil
+                    }
+                }
+        }
+        .sheet(item: $selectedPhoto) { photo in
+            PhotoDetailView(photo: photo, plant: plant)
+                .environmentObject(dataStore)
+        }
+    }
+    
+    func savePhoto(_ image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        
+        let photo = PlantPhoto(
+            plantID: plant.id,
+            dateTaken: Date(),
+            fileName: "\(UUID().uuidString).jpg",
+            notes: nil
+        )
+        
+        dataStore.addPhoto(photo, imageData: imageData)
+    }
+}
+
+struct PhotoThumbnail: View {
+    let photo: PlantPhoto
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            if let url = photo.imageURL,
+               let uiImage = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 80, height: 80)
+                    .clipped()
+                    .cornerRadius(8)
+            } else {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 80, height: 80)
+                    .overlay(
+                        Image(systemName: "photo")
+                            .foregroundColor(.gray)
+                    )
+            }
+            
+            Text(photo.dateTaken, style: .date)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+struct PhotoDetailView: View {
+    let photo: PlantPhoto
+    let plant: Plant
+    @EnvironmentObject var dataStore: DataStore
+    @Environment(\.dismiss) var dismiss
+    @State private var notes: String = ""
+    
+    var body: some View {
+        NavigationStack {
+            VStack {
+                if let url = photo.imageURL,
+                   let uiImage = UIImage(contentsOfFile: url.path) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 400)
+                        .padding()
+                }
+                
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text(plant.name)
+                            .font(.headline)
+                        Spacer()
+                        Text(photo.dateTaken, style: .date)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Text("Notes:")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    TextEditor(text: $notes)
+                        .frame(height: 100)
+                        .padding(8)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                }
+                .padding()
+                
+                Spacer()
+            }
+            .navigationTitle("Photo Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Delete") {
+                        dataStore.deletePhoto(photo)
+                        dismiss()
+                    }
+                    .foregroundColor(.red)
+                }
+            }
+            .onAppear {
+                notes = photo.notes ?? ""
+            }
         }
     }
 }

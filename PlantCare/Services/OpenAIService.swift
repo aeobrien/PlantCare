@@ -40,6 +40,7 @@ class OpenAIService {
         You must respond with ONLY a valid JSON object. Do not include any other text, markdown formatting, or explanations. Just return the raw JSON matching this exact structure:
         {
             "name": "Plant Name",
+            "latinName": "Scientific name in Latin (optional)",
             "lightType": "Direct" | "Indirect" | "Low",
             "preferredLightDirection": "North" | "Northeast" | "East" | "Southeast" | "South" | "Southwest" | "West" | "Northwest",
             "humidityPreference": "Low" | "Medium" | "High",
@@ -94,7 +95,7 @@ class OpenAIService {
         ]
         
         let request = OpenAIRequest(
-            model: "gpt-3.5-turbo",
+            model: "gpt-4o-mini",
             messages: messages,
             temperature: 0.7,
             response_format: nil
@@ -298,7 +299,7 @@ class OpenAIService {
         }
         
         let request = OpenAIRequest(
-            model: photoData != nil ? "gpt-4o" : "gpt-3.5-turbo",
+            model: photoData != nil ? "gpt-4o-mini" : "gpt-4o-mini",
             messages: messages,
             temperature: 0.7,
             response_format: nil
@@ -357,6 +358,69 @@ class OpenAIService {
         let questionResponse = try JSONDecoder().decode(AIPlantQuestionResponse.self, from: contentData)
         
         return questionResponse
+    }
+    
+    func identifyPlant(from imageData: Data, apiKey: String) async throws -> String {
+        let base64Image = imageData.base64EncodedString()
+        let imageUrl = "data:image/jpeg;base64,\(base64Image)"
+        
+        let systemPrompt = """
+        You are a plant identification expert. Analyze the provided image and identify the plant species.
+        Return ONLY the common name and Latin name of the plant in this exact format:
+        Common Name (Latin name)
+        
+        For example:
+        Monstera Deliciosa (Monstera deliciosa)
+        Snake Plant (Sansevieria trifasciata)
+        
+        If you cannot identify the plant with certainty, return "Unknown Plant".
+        Do not include any other text, explanations, or formatting.
+        """
+        
+        let userContent = MessageContent.array([
+            ContentItem(type: "text", text: "Please identify this plant:", image_url: nil),
+            ContentItem(type: "image_url", text: nil, image_url: ContentItem.ImageURL(url: imageUrl))
+        ])
+        
+        let messages = [
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+            OpenAIMessage(role: "user", content: userContent)
+        ]
+        
+        let request = OpenAIRequest(
+            model: "gpt-4o-mini",
+            messages: messages,
+            temperature: 0.3,
+            response_format: nil
+        )
+        
+        // Make the API call
+        var urlRequest = URLRequest(url: URL(string: baseURL)!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+        
+        if httpResponse.statusCode != 200 {
+            if let errorData = try? JSONDecoder().decode(OpenAIError.self, from: data) {
+                throw APIError.openAIError(errorData.error.message)
+            }
+            throw APIError.httpError(httpResponse.statusCode)
+        }
+        
+        let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+        
+        guard let content = openAIResponse.choices.first?.message.content else {
+            throw APIError.openAIError("No response content")
+        }
+        
+        return content.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
 }
 

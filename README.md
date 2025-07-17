@@ -14,6 +14,7 @@ A comprehensive iOS app for managing your plant collection with intelligent care
 - **Visual Descriptions**: Add memorable descriptions to help identify plants at a glance
 - **Smart Duplication**: Duplicate plants with automatic numbering (#1, #2, etc.)
 - **Bulk Import**: Import multiple plants from clipboard data
+- **Health Tracking**: Store and display AI-generated health feedback for each plant
 
 ### 📅 Care Routines
 - **Guided Care Sessions**: Step-by-step care routines organized by location
@@ -26,7 +27,12 @@ A comprehensive iOS app for managing your plant collection with intelligent care
 - **Plant Identification**: Identify plants from photos using AI
 - **Care Recommendations**: Get personalized care instructions based on your plant and home layout
 - **Intelligent Placement**: AI suggests optimal locations based on plant needs and available spaces
-- **Plant Q&A**: Ask questions about your plants and get expert advice
+- **Plant Q&A**: Multi-turn conversations with AI about your plants (up to 5 exchanges)
+- **Care Vibe Check**: AI reviews all plant care settings and suggests optimizations
+- **Health Check**: 
+  - Automatic health analysis after care routines (for plants with photos)
+  - Force health check for all plants from Settings
+  - Feedback displayed during next care routine
 
 ### 📊 Organization & Tracking
 - **Multiple Sort Options**: 
@@ -106,9 +112,11 @@ For automatic iCloud backup:
 
 ### Care Routine Tips
 - Plants are organized by location for efficient care
-- Take photos to document plant health
-- Use the AI assistant for plant-specific questions
+- Take photos to document plant health and enable AI health analysis
+- Use the AI assistant for plant-specific questions with multi-turn conversations
 - Mark care steps as complete - they won't save until session ends
+- Previous health check feedback is displayed for each plant
+- Complete care routine to receive AI health analysis for photographed plants
 
 ### AI Plant Addition
 1. Tap "Add Plant" → "Add via AI"
@@ -116,6 +124,18 @@ For automatic iCloud backup:
 3. Select indoor/outdoor preference
 4. Get AI recommendations for placement and care
 5. Customize and save
+
+### AI Health & Care Review
+1. **During Care Routine**: 
+   - Take photos of plants to enable health checks
+   - Ask AI questions with follow-up conversations
+   - View previous health feedback for each plant
+2. **After Care Routine**: 
+   - Automatic health analysis for photographed plants
+   - 1-2 sentence feedback saved for next routine
+3. **From Settings**:
+   - **Vibe Check**: Review and optimize all plant care settings
+   - **Health Check All**: Analyze latest photos of all plants
 
 ## Data Format
 
@@ -155,7 +175,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Built with SwiftUI
+- Built almost entirely using Claude Code – this is very much a personal project designed to help me kill fewer house plants rather than anything I would want to put out into the world as being something "I" created!
 - AI features powered by OpenAI
 - Icons from SF Symbols
 

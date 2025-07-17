@@ -157,7 +157,7 @@ class OpenAIService {
         return plantResponse
     }
     
-    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], zones: [Zone], photoData: Data?, apiKey: String) async throws -> AIPlantQuestionResponse {
+    func askPlantQuestion(question: String, plant: Plant, rooms: [Room], zones: [Zone], photoData: Data?, previousMessages: [ConversationMessage] = [], apiKey: String) async throws -> AIPlantQuestionResponse {
         // Create the plant information JSON
         let currentLocation: String
         let currentLocationType: String
@@ -276,27 +276,53 @@ class OpenAIService {
         """
         
         // Create the request with image support if photo is provided
-        let messages: [OpenAIMessage]
+        var messages: [OpenAIMessage] = [
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt))
+        ]
         
-        if let photoData = photoData {
-            // Convert image data to base64
-            let base64Image = photoData.base64EncodedString()
-            let imageUrl = "data:image/jpeg;base64,\(base64Image)"
+        // Add conversation history if available
+        if !previousMessages.isEmpty {
+            // Add initial context message
+            messages.append(OpenAIMessage(role: "user", content: MessageContent.text(userPrompt)))
             
-            let userContent = MessageContent.array([
-                ContentItem(type: "text", text: userPrompt, image_url: nil),
-                ContentItem(type: "image_url", text: nil, image_url: ContentItem.ImageURL(url: imageUrl))
-            ])
+            // Add previous conversation messages
+            for message in previousMessages {
+                if message.role == "user" {
+                    messages.append(OpenAIMessage(role: "user", content: MessageContent.text(message.content)))
+                } else {
+                    messages.append(OpenAIMessage(role: "assistant", content: MessageContent.text(message.content)))
+                }
+            }
             
-            messages = [
-                OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
-                OpenAIMessage(role: "user", content: userContent)
-            ]
+            // Add current question
+            if let photoData = photoData {
+                let base64Image = photoData.base64EncodedString()
+                let imageUrl = "data:image/jpeg;base64,\(base64Image)"
+                
+                let userContent = MessageContent.array([
+                    ContentItem(type: "text", text: question, image_url: nil),
+                    ContentItem(type: "image_url", text: nil, image_url: ContentItem.ImageURL(url: imageUrl))
+                ])
+                messages.append(OpenAIMessage(role: "user", content: userContent))
+            } else {
+                messages.append(OpenAIMessage(role: "user", content: MessageContent.text(question)))
+            }
         } else {
-            messages = [
-                OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
-                OpenAIMessage(role: "user", content: MessageContent.text(userPrompt))
-            ]
+            // First message - include full context
+            if let photoData = photoData {
+                // Convert image data to base64
+                let base64Image = photoData.base64EncodedString()
+                let imageUrl = "data:image/jpeg;base64,\(base64Image)"
+                
+                let userContent = MessageContent.array([
+                    ContentItem(type: "text", text: userPrompt, image_url: nil),
+                    ContentItem(type: "image_url", text: nil, image_url: ContentItem.ImageURL(url: imageUrl))
+                ])
+                
+                messages.append(OpenAIMessage(role: "user", content: userContent))
+            } else {
+                messages.append(OpenAIMessage(role: "user", content: MessageContent.text(userPrompt)))
+            }
         }
         
         let request = OpenAIRequest(
@@ -422,6 +448,237 @@ class OpenAIService {
         }
         
         return content.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
+    
+    func performPlantCareVibeCheck(plants: [Plant], rooms: [Room], zones: [Zone], apiKey: String) async throws -> PlantCareVibeCheckResponse {
+        // Create plant information JSON
+        var plantsInfo: [[String: Any]] = []
+        
+        for plant in plants {
+            var plantInfo: [String: Any] = [
+                "id": plant.id.uuidString,
+                "name": plant.name,
+                "latinName": plant.latinName ?? "",
+                "lightType": plant.lightType.rawValue,
+                "preferredLightDirection": plant.preferredLightDirection.rawValue,
+                "humidityPreference": plant.humidityPreference?.rawValue ?? "Not specified",
+                "generalNotes": plant.generalNotes,
+                "careSteps": plant.careSteps.map { careStep in
+                    [
+                        "type": careStep.type.rawValue,
+                        "displayName": careStep.displayName,
+                        "instructions": careStep.instructions,
+                        "frequencyDays": careStep.frequencyDays,
+                        "isEnabled": careStep.isEnabled
+                    ] as [String : Any]
+                }
+            ]
+            
+            // Add location info
+            if let roomID = plant.assignedRoomID, let room = rooms.first(where: { $0.id == roomID }) {
+                plantInfo["location"] = room.name
+                plantInfo["locationType"] = "indoor"
+                if let windowID = plant.assignedWindowID, let window = room.windows.first(where: { $0.id == windowID }) {
+                    plantInfo["windowDirection"] = window.direction.rawValue
+                }
+            } else if let zoneID = plant.assignedZoneID, let zone = zones.first(where: { $0.id == zoneID }) {
+                plantInfo["location"] = zone.name
+                plantInfo["locationType"] = "outdoor"
+                plantInfo["zoneAspect"] = zone.aspect.rawValue
+                plantInfo["zoneSunPeriod"] = zone.sunPeriod.rawValue
+            }
+            
+            plantsInfo.append(plantInfo)
+        }
+        
+        let plantsJSON = try JSONSerialization.data(withJSONObject: plantsInfo, options: .prettyPrinted)
+        let plantsString = String(data: plantsJSON, encoding: .utf8) ?? "[]"
+        
+        let systemPrompt = """
+        You are a plant care expert reviewing a user's plant collection and care settings. Your role is to:
+        1. Review all plants and their care instructions
+        2. Identify any care settings that seem incorrect or could be optimized
+        3. Look for plants that might have unnecessary care steps (e.g., dusting for plants that don't need it, misting for succulents)
+        4. Check if watering intervals and instructions are appropriate for each plant type
+        5. Verify light requirements match their placement
+        
+        You must respond with ONLY a valid JSON object. Do not include any other text, markdown formatting, or explanations. Just return the raw JSON matching this exact structure:
+        {
+            "overall": "Brief 1-2 sentence summary of the overall care setup quality",
+            "suggestions": [
+                {
+                    "plantId": "UUID string of the plant",
+                    "plantName": "Name of the plant",
+                    "field": "wateringFrequencyDays" | "wateringInstructions" | "mistingFrequencyDays" | "mistingInstructions" | "dustingFrequencyDays" | "dustingInstructions" | "rotationFrequencyDays" | "rotationInstructions" | "removeWatering" | "removeMisting" | "removeDusting" | "removeRotation" | "lightType" | "humidityPreference" | "location",
+                    "currentValue": "Current value as string",
+                    "suggestedValue": "Suggested value as string",
+                    "reason": "Brief explanation why this change is recommended"
+                }
+            ]
+        }
+        
+        IMPORTANT RULES:
+        1. Only suggest changes that would genuinely improve plant care
+        2. Be specific about which care steps to modify or remove
+        3. For removal suggestions, use "removeWatering", "removeMisting", etc. as the field
+        4. For frequency changes, the field should be like "wateringFrequencyDays"
+        5. For instruction changes, the field should be like "wateringInstructions"
+        6. Keep reasons brief and clear
+        7. If everything looks good, return an empty suggestions array
+        
+        Remember: Return ONLY the JSON object, no other text.
+        """
+        
+        let userPrompt = """
+        Please review my plant collection and suggest any improvements to the care settings:
+        
+        \(plantsString)
+        """
+        
+        let messages = [
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+            OpenAIMessage(role: "user", content: MessageContent.text(userPrompt))
+        ]
+        
+        let request = OpenAIRequest(
+            model: "gpt-4o-mini",
+            messages: messages,
+            temperature: 0.7,
+            response_format: nil
+        )
+        
+        // Make the API call
+        var urlRequest = URLRequest(url: URL(string: baseURL)!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+        
+        if httpResponse.statusCode != 200 {
+            if let errorData = try? JSONDecoder().decode(OpenAIError.self, from: data) {
+                throw APIError.openAIError(errorData.error.message)
+            }
+            throw APIError.httpError(httpResponse.statusCode)
+        }
+        
+        let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+        
+        guard let content = openAIResponse.choices.first?.message.content else {
+            throw APIError.invalidResponse
+        }
+        
+        // Clean and parse the response
+        var cleanedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        if cleanedContent.hasPrefix("```json") {
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```json", with: "")
+        }
+        if cleanedContent.hasPrefix("```") {
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```", with: "")
+        }
+        cleanedContent = cleanedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if let startIndex = cleanedContent.firstIndex(of: "{"),
+           let endIndex = cleanedContent.lastIndex(of: "}") {
+            let jsonRange = startIndex...endIndex
+            cleanedContent = String(cleanedContent[jsonRange])
+        }
+        
+        guard let contentData = cleanedContent.data(using: .utf8) else {
+            throw APIError.invalidResponse
+        }
+        
+        let vibeCheckResponse = try JSONDecoder().decode(PlantCareVibeCheckResponse.self, from: contentData)
+        return vibeCheckResponse
+    }
+    
+    func performPlantHealthCheck(plantId: String, plantName: String, recentPhotos: [Data], apiKey: String) async throws -> PlantHealthCheckResponse {
+        let systemPrompt = """
+        You are a plant health expert analyzing photos of a plant. Based on the images provided:
+        1. Assess the overall health of the plant
+        2. Look for signs of stress, disease, pests, or nutrient deficiencies
+        3. Note any positive aspects of the plant's condition
+        4. Provide actionable advice if any issues are detected
+        
+        You must respond with ONLY a valid JSON object:
+        {
+            "plantId": "The plant ID provided",
+            "feedback": "1-2 sentences of feedback about the plant's health and any advice"
+        }
+        
+        Keep your feedback concise, friendly, and actionable. Focus on the most important observations.
+        Remember: Return ONLY the JSON object, no other text.
+        """
+        
+        // Convert photos to base64
+        let photoContents = recentPhotos.prefix(3).map { photoData in
+            ContentItem(
+                type: "image_url",
+                text: nil,
+                image_url: ContentItem.ImageURL(url: "data:image/jpeg;base64,\(photoData.base64EncodedString())")
+            )
+        }
+        
+        var userContent = [ContentItem(type: "text", text: "Please analyze the health of my \(plantName) based on these recent photos:", image_url: nil)]
+        userContent.append(contentsOf: photoContents)
+        
+        let messages = [
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+            OpenAIMessage(role: "user", content: MessageContent.array(userContent))
+        ]
+        
+        let request = OpenAIRequest(
+            model: "gpt-4o-mini",
+            messages: messages,
+            temperature: 0.7,
+            response_format: nil
+        )
+        
+        // Make the API call
+        var urlRequest = URLRequest(url: URL(string: baseURL)!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+        
+        if httpResponse.statusCode != 200 {
+            if let errorData = try? JSONDecoder().decode(OpenAIError.self, from: data) {
+                throw APIError.openAIError(errorData.error.message)
+            }
+            throw APIError.httpError(httpResponse.statusCode)
+        }
+        
+        let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+        
+        guard let content = openAIResponse.choices.first?.message.content else {
+            throw APIError.invalidResponse
+        }
+        
+        // Clean and parse the response
+        var cleanedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let startIndex = cleanedContent.firstIndex(of: "{"),
+           let endIndex = cleanedContent.lastIndex(of: "}") {
+            let jsonRange = startIndex...endIndex
+            cleanedContent = String(cleanedContent[jsonRange])
+        }
+        
+        guard let contentData = cleanedContent.data(using: .utf8) else {
+            throw APIError.invalidResponse
+        }
+        
+        let healthCheckResponse = try JSONDecoder().decode(PlantHealthCheckResponse.self, from: contentData)
+        return healthCheckResponse
     }
 }
 

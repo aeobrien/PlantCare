@@ -4,6 +4,8 @@ struct SettingsView: View {
     @EnvironmentObject var dataStore: DataStore
     @State private var settings: AppSettings
     @State private var roomOrder: [Room] = []
+    @State private var showingVibeCheck = false
+    @State private var showingHealthCheck = false
     
     init() {
         self._settings = State(initialValue: DataStore.shared.settings)
@@ -89,6 +91,48 @@ struct SettingsView: View {
                 
                 BackupSection()
                 
+                Section(header: Text("Plant Care Review")) {
+                    Button(action: {
+                        showingVibeCheck = true
+                    }) {
+                        HStack {
+                            Image(systemName: "wand.and.stars")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Plant Care Vibe Check")
+                                    .foregroundColor(.primary)
+                                Text("Let AI review and optimize your plant care settings")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Button(action: {
+                        showingHealthCheck = true
+                    }) {
+                        HStack {
+                            Image(systemName: "heart.text.square")
+                                .foregroundColor(.green)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Health Check All Plants")
+                                    .foregroundColor(.primary)
+                                Text("Analyze health of all plants with photos")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                    }
+                }
+                
                 Section(header: Text("Care Routine Room Order")) {
                     Text("Drag to reorder rooms for care routines")
                         .font(.caption)
@@ -130,6 +174,14 @@ struct SettingsView: View {
             }
             .onChange(of: settings.openAIAPIKey) { _ in
                 saveSettings()
+            }
+            .sheet(isPresented: $showingVibeCheck) {
+                PlantCareVibeCheckView()
+                    .environmentObject(dataStore)
+            }
+            .sheet(isPresented: $showingHealthCheck) {
+                ForceHealthCheckView()
+                    .environmentObject(dataStore)
             }
         }
     }

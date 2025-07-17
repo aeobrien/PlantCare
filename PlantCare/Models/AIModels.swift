@@ -116,3 +116,28 @@ struct CareSuggestion: Codable {
     let instructions: String?
     let frequencyDays: Int?
 }
+
+struct PlantCareVibeCheckResponse: Codable {
+    let overall: String
+    let suggestions: [PlantCareRevision]
+}
+
+struct PlantCareRevision: Codable {
+    let plantId: String
+    let plantName: String
+    let field: String
+    let currentValue: String
+    let suggestedValue: String
+    let reason: String
+}
+
+struct PlantHealthCheckResponse: Codable {
+    let plantId: String
+    let feedback: String
+}
+
+struct ConversationMessage: Codable {
+    let role: String
+    let content: String
+    let timestamp: Date
+}

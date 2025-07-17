@@ -180,6 +180,8 @@ struct Plant: Identifiable, Codable {
     var generalNotes: String
     var careSteps: [CareStep] = []
     var humidityPreference: HumidityPreference?
+    var lastHealthCheckFeedback: String?
+    var lastHealthCheckDate: Date?
     
     var wateringStep: CareStep? {
         careSteps.first { $0.type == .watering }

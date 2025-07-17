@@ -16,6 +16,8 @@ struct AIPlantQuestionView: View {
     @State private var selectedPhotoData: Data?
     @State private var selectedTimelinePhotoID: UUID?
     @State private var showingPhotoPreview = false
+    @State private var conversationMessages: [ConversationMessage] = []
+    @State private var pendingResponse: AIPlantQuestionResponse?
     
     @FocusState private var isQuestionFocused: Bool
     
@@ -23,147 +25,191 @@ struct AIPlantQuestionView: View {
         dataStore.photos(for: plant.id).prefix(5).map { $0 }
     }
     
+    var selectedTimelinePhotoData: Data? {
+        guard let photoID = selectedTimelinePhotoID,
+              let photo = plantPhotos.first(where: { $0.id == photoID }),
+              let url = photo.imageURL,
+              let data = try? Data(contentsOf: url) else { return nil }
+        return data
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        PlantInfoCard(plant: plant, room: dataStore.roomForPlant(plant))
-                        
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Ask about \(plant.name)")
-                                .font(.headline)
-                            
-                            TextEditor(text: $question)
-                                .frame(minHeight: 100)
-                                .padding(8)
-                                .background(Color(.systemGray6))
-                                .cornerRadius(8)
-                                .focused($isQuestionFocused)
-                            
-                            // Photo picker section
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                                        HStack {
-                                            Image(systemName: "camera")
-                                            Text("Add Photo")
-                                        }
+                // Plant info header
+                PlantInfoCard(plant: plant, room: dataStore.roomForPlant(plant))
+                    .padding()
+                
+                // Chat messages
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            // Initial prompt if no messages
+                            if conversationMessages.isEmpty {
+                                VStack(spacing: 16) {
+                                    Image(systemName: "bubble.left.and.bubble.right")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text("Ask me anything about \(plant.name)")
+                                        .font(.headline)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text("You can ask about care, health, placement, or any concerns. Include a photo for visual analysis.")
                                         .font(.subheadline)
-                                        .foregroundColor(.blue)
-                                    }
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 60)
+                            }
+                            
+                            // Show conversation history
+                            ForEach(conversationMessages, id: \.timestamp) { message in
+                                ConversationBubble(message: message)
+                                    .id(message.timestamp)
+                            }
+                            
+                            // Show pending response if available
+                            if let response = pendingResponse {
+                                VStack(alignment: .leading, spacing: 16) {
+                                    ConversationBubble(message: ConversationMessage(
+                                        role: "assistant",
+                                        content: response.answer,
+                                        timestamp: Date()
+                                    ))
                                     
-                                    Spacer()
-                                    
-                                    if selectedPhotoData != nil || selectedTimelinePhotoID != nil {
-                                        Button("Remove Photo") {
-                                            selectedPhoto = nil
-                                            selectedPhotoData = nil
-                                            selectedTimelinePhotoID = nil
+                                    if response.suggestedChanges != nil {
+                                        Button(action: {
+                                            showingReview = true
+                                        }) {
+                                            HStack {
+                                                Image(systemName: "wand.and.stars")
+                                                Text("Review Suggested Changes")
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .cornerRadius(8)
                                         }
-                                        .font(.caption)
-                                        .foregroundColor(.red)
+                                        .padding(.horizontal)
                                     }
                                 }
+                            }
+                            
+                            // Loading indicator
+                            if isLoading {
+                                HStack {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                    Text("AI is thinking...")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding()
+                            }
+                        }
+                        .padding()
+                    }
+                    .onChange(of: conversationMessages.count) { _, _ in
+                        withAnimation {
+                            proxy.scrollTo(conversationMessages.last?.timestamp, anchor: .bottom)
+                        }
+                    }
+                }
+                
+                // Message input area
+                VStack(spacing: 0) {
+                    Divider()
+                    
+                    // Photo selection area (only show for first message)
+                    if conversationMessages.isEmpty {
+                        VStack(spacing: 8) {
+                            HStack {
+                                PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                                    HStack {
+                                        Image(systemName: "camera")
+                                        Text("Add Photo")
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                                }
                                 
-                                // Show recent photos from timeline
-                                if !plantPhotos.isEmpty {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text("Or select from recent photos:")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                        
-                                        ScrollView(.horizontal, showsIndicators: false) {
-                                            HStack(spacing: 12) {
-                                                ForEach(plantPhotos) { photo in
-                                                    TimelinePhotoThumbnail(
-                                                        photo: photo,
-                                                        isSelected: selectedTimelinePhotoID == photo.id
-                                                    )
-                                                    .onTapGesture {
-                                                        selectTimelinePhoto(photo)
-                                                    }
-                                                }
+                                Spacer()
+                                
+                                if selectedPhotoData != nil || selectedTimelinePhotoID != nil {
+                                    Button("Remove") {
+                                        selectedPhoto = nil
+                                        selectedPhotoData = nil
+                                        selectedTimelinePhotoID = nil
+                                    }
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                                }
+                            }
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                            
+                            // Show recent photos from timeline
+                            if !plantPhotos.isEmpty {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 8) {
+                                        ForEach(plantPhotos) { photo in
+                                            TimelinePhotoThumbnail(
+                                                photo: photo,
+                                                isSelected: selectedTimelinePhotoID == photo.id
+                                            )
+                                            .onTapGesture {
+                                                selectTimelinePhoto(photo)
                                             }
                                         }
                                     }
-                                }
-                                
-                                if let photoData = selectedPhotoData, let uiImage = UIImage(data: photoData) {
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(maxHeight: 200)
-                                        .cornerRadius(8)
-                                        .onTapGesture {
-                                            showingPhotoPreview = true
-                                        }
+                                    .padding(.horizontal)
                                 }
                             }
                             
-                            Text("Examples: Is this plant getting enough light? Should I adjust the watering schedule? Is the room humidity appropriate? You can include a photo to help with visual analysis.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        if let response = aiResponse {
-                            VStack(alignment: .leading, spacing: 16) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        Image(systemName: "bubble.left.fill")
-                                            .foregroundColor(.blue)
-                                        Text("AI Response")
-                                            .font(.headline)
+                            if let photoData = selectedPhotoData, let uiImage = UIImage(data: photoData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 100)
+                                    .cornerRadius(8)
+                                    .padding(.horizontal)
+                                    .onTapGesture {
+                                        showingPhotoPreview = true
                                     }
-                                    
-                                    Text(response.answer)
-                                        .font(.body)
-                                        .padding()
-                                        .background(Color(.systemGray6))
-                                        .cornerRadius(8)
-                                }
-                                
-                                if response.suggestedChanges != nil {
-                                    Button(action: {
-                                        showingReview = true
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "wand.and.stars")
-                                            Text("Review Suggested Changes")
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
-                                    }
-                                }
                             }
                         }
                     }
-                    .padding()
-                }
-                
-                if !isLoading && aiResponse == nil {
-                    VStack {
-                        Divider()
+                    
+                    HStack(alignment: .bottom, spacing: 8) {
+                        TextField("Type your message...", text: $question, axis: .vertical)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .lineLimit(1...4)
+                            .focused($isQuestionFocused)
+                            .disabled(conversationMessages.count >= 10)
                         
                         Button(action: askQuestion) {
-                            HStack {
-                                Image(systemName: "paperplane.fill")
-                                Text("Ask AI")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(question.isEmpty ? Color(.systemGray5) : Color.blue)
-                            .foregroundColor(question.isEmpty ? Color(.systemGray) : .white)
-                            .cornerRadius(8)
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(question.isEmpty || conversationMessages.count >= 10 ? Color(.systemGray5) : Color.blue)
+                                .clipShape(Circle())
                         }
-                        .disabled(question.isEmpty || isLoading)
-                        .padding()
+                        .disabled(question.isEmpty || isLoading || conversationMessages.count >= 10)
                     }
-                    .background(Color(.systemBackground))
+                    .padding()
+                    
+                    if conversationMessages.count >= 10 {
+                        Text("Maximum conversation limit reached (5 exchanges)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 8)
+                    }
                 }
+                .background(Color(.systemGroupedBackground))
             }
             .navigationTitle("Ask AI")
             .navigationBarTitleDisplayMode(.inline)
@@ -174,17 +220,12 @@ struct AIPlantQuestionView: View {
                     }
                 }
                 
-                if aiResponse != nil {
+                if !conversationMessages.isEmpty {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("New Question") {
+                        Button("New Conversation") {
                             resetForNewQuestion()
                         }
                     }
-                }
-            }
-            .overlay {
-                if isLoading {
-                    LoadingView()
                 }
             }
             .alert("Error", isPresented: $showingError) {
@@ -193,12 +234,21 @@ struct AIPlantQuestionView: View {
                 Text(errorMessage)
             }
             .sheet(isPresented: $showingReview) {
-                if let response = aiResponse, let changes = response.suggestedChanges {
+                if let response = pendingResponse, let changes = response.suggestedChanges {
                     PlantChangeReviewView(
                         plant: plant,
                         suggestedChanges: changes,
                         onApprove: { updatedPlant in
                             dataStore.updatePlant(updatedPlant)
+                            // Apply the response after approval
+                            if let response = pendingResponse {
+                                conversationMessages.append(ConversationMessage(
+                                    role: "assistant",
+                                    content: response.answer,
+                                    timestamp: Date()
+                                ))
+                                pendingResponse = nil
+                            }
                             dismiss()
                         }
                     )
@@ -232,6 +282,18 @@ struct AIPlantQuestionView: View {
         isLoading = true
         isQuestionFocused = false
         
+        // Add user message to conversation
+        let userMessage = ConversationMessage(
+            role: "user",
+            content: question,
+            timestamp: Date()
+        )
+        conversationMessages.append(userMessage)
+        
+        // Clear the question field
+        let currentQuestion = question
+        question = ""
+        
         Task {
             do {
                 let apiKey = dataStore.settings.openAIAPIKey
@@ -239,21 +301,43 @@ struct AIPlantQuestionView: View {
                     throw APIError.openAIError("OpenAI API key not configured")
                 }
                 
+                let photoData = selectedPhotoData ?? selectedTimelinePhotoData
+                
                 let response = try await OpenAIService.shared.askPlantQuestion(
-                    question: question,
+                    question: currentQuestion,
                     plant: plant,
                     rooms: dataStore.rooms,
                     zones: dataStore.zones,
-                    photoData: selectedPhotoData,
+                    photoData: photoData,
+                    previousMessages: conversationMessages.dropLast(), // Don't include the message we just added
                     apiKey: apiKey
                 )
                 
                 await MainActor.run {
-                    self.aiResponse = response
+                    self.pendingResponse = response
                     self.isLoading = false
+                    
+                    // If no changes suggested, add response to conversation
+                    if response.suggestedChanges == nil {
+                        conversationMessages.append(ConversationMessage(
+                            role: "assistant",
+                            content: response.answer,
+                            timestamp: Date()
+                        ))
+                        pendingResponse = nil
+                    }
+                    
+                    // Clear photo selection after first use
+                    if conversationMessages.count == 2 {
+                        selectedPhoto = nil
+                        selectedPhotoData = nil
+                        selectedTimelinePhotoID = nil
+                    }
                 }
             } catch {
                 await MainActor.run {
+                    // Remove the user message if there was an error
+                    conversationMessages.removeLast()
                     self.errorMessage = error.localizedDescription
                     self.showingError = true
                     self.isLoading = false
@@ -265,6 +349,8 @@ struct AIPlantQuestionView: View {
     func resetForNewQuestion() {
         question = ""
         aiResponse = nil
+        conversationMessages = []
+        pendingResponse = nil
         selectedPhoto = nil
         selectedPhotoData = nil
         selectedTimelinePhotoID = nil
@@ -447,6 +533,52 @@ struct ZoomableImageView: UIViewRepresentable {
         func viewForZooming(in scrollView: UIScrollView) -> UIView? {
             return scrollView.subviews.first
         }
+    }
+}
+
+struct ConversationBubble: View {
+    let message: ConversationMessage
+    
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            if message.role == "assistant" {
+                Image(systemName: "sparkles.square.fill")
+                    .font(.title2)
+                    .foregroundColor(.blue)
+                    .frame(width: 32, height: 32)
+            } else {
+                Spacer()
+                    .frame(width: 32)
+            }
+            
+            VStack(alignment: message.role == "user" ? .trailing : .leading, spacing: 4) {
+                Text(message.content)
+                    .font(.body)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(message.role == "user" ? Color.blue : Color(.systemGray6))
+                    .foregroundColor(message.role == "user" ? .white : .primary)
+                    .cornerRadius(18)
+                    .frame(maxWidth: 280, alignment: message.role == "user" ? .trailing : .leading)
+                
+                Text(message.timestamp.formatted(date: .omitted, time: .shortened))
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: message.role == "user" ? .trailing : .leading)
+            
+            if message.role == "user" {
+                Image(systemName: "person.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+                    .frame(width: 32, height: 32)
+            } else {
+                Spacer()
+                    .frame(width: 32)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 2)
     }
 }
 

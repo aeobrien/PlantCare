@@ -8,6 +8,7 @@ struct CareRoutineView: View {
     @State private var completedCareSteps: Set<String> = []
     @State private var showingCompletion = false
     @State private var plantsWithPhotos: Set<UUID> = []
+    @State private var showingHealthCheck = false
     
     enum SpaceType {
         case room(Room)
@@ -92,7 +93,11 @@ struct CareRoutineView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Done") {
-                            endRoutine()
+                            if !plantsWithPhotos.isEmpty && dataStore.settings.openAIAPIKey.isEmpty == false {
+                                showingHealthCheck = true
+                            } else {
+                                endRoutine()
+                            }
                         }
                     }
                 }
@@ -150,6 +155,13 @@ struct CareRoutineView: View {
         }
         .onAppear {
             dataStore.startCareSession()
+        }
+        .sheet(isPresented: $showingHealthCheck) {
+            PlantHealthCheckView(plantsWithPhotos: plantsWithPhotos)
+                .environmentObject(dataStore)
+                .onDisappear {
+                    endRoutine()
+                }
         }
     }
     
@@ -330,6 +342,30 @@ struct PlantCareSection: View {
                 .padding(.vertical, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(.systemGray5).opacity(0.5))
+                .cornerRadius(8)
+            }
+            
+            // Show last health check feedback if available
+            if let healthFeedback = plant.lastHealthCheckFeedback {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "heart.text.square")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                        Text("Health Check Feedback")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.blue)
+                    }
+                    Text(healthFeedback)
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.blue.opacity(0.1))
                 .cornerRadius(8)
             }
             

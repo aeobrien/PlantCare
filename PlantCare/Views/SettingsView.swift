@@ -6,6 +6,7 @@ struct SettingsView: View {
     @State private var roomOrder: [Room] = []
     @State private var showingVibeCheck = false
     @State private var showingHealthCheck = false
+    @State private var showingWateringUpdate = false
     
     init() {
         self._settings = State(initialValue: DataStore.shared.settings)
@@ -131,6 +132,26 @@ struct SettingsView: View {
                                 .font(.caption)
                         }
                     }
+                    
+                    Button(action: {
+                        showingWateringUpdate = true
+                    }) {
+                        HStack {
+                            Image(systemName: "drop.fill")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Update Watering Instructions")
+                                    .foregroundColor(.primary)
+                                Text("Improve watering guidance for all plants (one-time)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                    }
                 }
                 
                 Section(header: Text("Care Routine Room Order")) {
@@ -181,6 +202,10 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingHealthCheck) {
                 ForceHealthCheckView()
+                    .environmentObject(dataStore)
+            }
+            .sheet(isPresented: $showingWateringUpdate) {
+                UpdateWateringInstructionsView()
                     .environmentObject(dataStore)
             }
         }

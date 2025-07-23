@@ -108,7 +108,7 @@ struct ContentView: View {
                 Spacer()
                 
                 if let lastCareDate = dataStore.plants
-                    .flatMap({ $0.careSteps })
+                    .flatMap({ $0.enabledCareSteps })
                     .compactMap({ $0.lastCompletedDate })
                     .max() {
                     VStack {

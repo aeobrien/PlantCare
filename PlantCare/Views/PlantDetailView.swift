@@ -134,7 +134,7 @@ struct PlantDetailView: View {
                         }
                     }
                     
-                    if plant.careSteps.isEmpty {
+                    if plant.enabledCareSteps.isEmpty {
                         VStack(spacing: 12) {
                             Image(systemName: "leaf.circle")
                                 .font(.system(size: 40))
@@ -154,7 +154,7 @@ struct PlantDetailView: View {
                         .cornerRadius(8)
                     } else {
                         VStack(spacing: 8) {
-                            ForEach(plant.careSteps) { careStep in
+                            ForEach(plant.enabledCareSteps) { careStep in
                                 CareStepDetailCard(careStep: careStep)
                             }
                         }

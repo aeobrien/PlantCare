@@ -183,12 +183,26 @@ struct Plant: Identifiable, Codable {
     var lastHealthCheckFeedback: String?
     var lastHealthCheckDate: Date?
     
+    var isOutdoor: Bool {
+        assignedZoneID != nil
+    }
+    
     var wateringStep: CareStep? {
         careSteps.first { $0.type == .watering }
     }
     
     var enabledCareSteps: [CareStep] {
-        careSteps.filter { $0.isEnabled }
+        careSteps.filter { step in
+            // Check if the step is enabled
+            guard step.isEnabled else { return false }
+            
+            // If plant is outdoor, exclude misting and dusting
+            if isOutdoor && (step.type == .misting || step.type == .dusting) {
+                return false
+            }
+            
+            return true
+        }
     }
     
     func visibleCareStepsForRoutine(hideFutureDays: Int) -> [CareStep] {

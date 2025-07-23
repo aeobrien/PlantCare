@@ -45,7 +45,7 @@ class OpenAIService {
             "lightType": "Direct" | "Indirect" | "Low",
             "preferredLightDirection": "North" | "Northeast" | "East" | "Southeast" | "South" | "Southwest" | "West" | "Northwest",
             "humidityPreference": "Low" | "Medium" | "High",
-            "wateringInstructions": "Detailed watering instructions",
+            "wateringInstructions": "Detailed watering instructions that include: 1) A specific guiding principle for when to water (e.g., 'when top 1cm is dry', 'when soil is completely dry', 'when leaves start to droop'), and 2) How much water to use (e.g., 'water sparingly', 'water deeply until drainage', 'moderate amount keeping soil moist')",
             "wateringFrequencyDays": number,
             "mistingInstructions": "Misting instructions (optional)",
             "mistingFrequencyDays": number (optional),
@@ -57,6 +57,10 @@ class OpenAIService {
             "recommendedSpaces": ["First choice space name", "Second choice space name"],
             "recommendedSpaceTypes": ["indoor" | "outdoor", "indoor" | "outdoor"]
         }
+        
+        IMPORTANT: For watering instructions, you MUST provide:
+        1. A specific indicator for WHEN to water (e.g., "when top 2-3cm of soil is dry", "when soil is completely dry throughout", "when leaves begin to droop slightly")
+        2. Clear guidance on HOW MUCH water to use (e.g., "water thoroughly until water drains from bottom", "water sparingly with just enough to moisten top layer", "water moderately to keep soil evenly moist but not waterlogged")
         
         Base your space recommendations on:
         
@@ -679,6 +683,65 @@ class OpenAIService {
         
         let healthCheckResponse = try JSONDecoder().decode(PlantHealthCheckResponse.self, from: contentData)
         return healthCheckResponse
+    }
+    
+    func updateWateringInstructions(for plant: Plant, apiKey: String) async throws -> String {
+        let systemPrompt = """
+        You are a plant care expert. Your task is to improve watering instructions for a specific plant.
+        
+        You MUST provide watering instructions that include:
+        1. A SPECIFIC indicator for WHEN to water (e.g., "when top 2-3cm of soil is dry", "when soil is completely dry throughout", "when leaves begin to droop slightly")
+        2. Clear guidance on HOW MUCH water to use (e.g., "water thoroughly until water drains from bottom", "water sparingly with just enough to moisten top layer", "water moderately to keep soil evenly moist but not waterlogged")
+        
+        Provide ONLY the improved watering instructions as a single paragraph. Do not include any other text, formatting, or explanations.
+        """
+        
+        let userPrompt = """
+        Plant: \(plant.name)\(plant.latinName.map { " (\($0))" } ?? "")
+        Current watering instructions: \(plant.wateringStep?.instructions ?? "No current instructions")
+        
+        Please provide improved watering instructions with specific guidance on when and how much to water.
+        """
+        
+        let messages = [
+            OpenAIMessage(role: "system", content: MessageContent.text(systemPrompt)),
+            OpenAIMessage(role: "user", content: MessageContent.text(userPrompt))
+        ]
+        
+        let request = OpenAIRequest(
+            model: "gpt-4o-mini",
+            messages: messages,
+            temperature: 0.7,
+            response_format: nil
+        )
+        
+        // Make the API call
+        var urlRequest = URLRequest(url: URL(string: baseURL)!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+        
+        if httpResponse.statusCode != 200 {
+            if let errorData = try? JSONDecoder().decode(OpenAIError.self, from: data) {
+                throw APIError.openAIError(errorData.error.message)
+            }
+            throw APIError.httpError(httpResponse.statusCode)
+        }
+        
+        let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
+        
+        guard let content = openAIResponse.choices.first?.message.content else {
+            throw APIError.invalidResponse
+        }
+        
+        return content.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

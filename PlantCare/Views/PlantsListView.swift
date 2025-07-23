@@ -235,7 +235,7 @@ struct PlantListRow: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                } else if plant.careSteps.isEmpty {
+                } else if plant.enabledCareSteps.isEmpty {
                     Text("No care steps")
                         .font(.caption)
                         .foregroundColor(.secondary)

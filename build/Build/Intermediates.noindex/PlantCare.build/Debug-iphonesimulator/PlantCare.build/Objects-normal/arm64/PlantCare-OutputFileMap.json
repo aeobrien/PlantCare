@@ -1,0 +1,358 @@
+{
+  "" : {
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCare-master.dia",
+    "emit-module-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCare-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCare-master-emit-module.dia",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCare-master.swiftdeps"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/ContentView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/AIModels.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIModels~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/ImportModels.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportModels~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/Models.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/SortOptions.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/PlantCareApp.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareApp~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Services/BackupService.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BackupService~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Services/OpenAIService.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Services/PlantCareBackupDocument.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Store/DataStore.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Store/NotificationManager.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Utils/Extensions.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Extensions~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AIPlantAddView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantAddView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AIPlantQuestionView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AIPlantQuestionView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AddPlantsToSpaceView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AddZoneView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddZoneView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/BatchHealthCheckView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/CareRoutineView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/EditZoneView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ForceHealthCheckView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ImagePicker.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ImportPlantsView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImportPlantsView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/MovePlantSheet.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/MovePlantSheet~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantCareVibeCheckView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareVibeCheckView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantChangeReviewView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantChangeReviewView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantDetailView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantDetailView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantHealthCheckView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantHealthCheckView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantsListView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/RoomDetailView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomDetailView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/RoomsListView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/SettingsView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/SpacesListView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/UpdateWateringInstructionsView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ZoneDetailView.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView~partial.swiftmodule"
+  },
+  "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

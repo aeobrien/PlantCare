@@ -77,7 +77,8 @@ struct AIPlantQuestionView: View {
                                     ConversationBubble(message: ConversationMessage(
                                         role: "assistant",
                                         content: response.answer,
-                                        timestamp: Date()
+                                        timestamp: Date(),
+                                        photoData: nil
                                     ))
                                     
                                     if response.suggestedChanges != nil {
@@ -283,10 +284,12 @@ struct AIPlantQuestionView: View {
         isQuestionFocused = false
         
         // Add user message to conversation
+        let photoData = selectedPhotoData ?? selectedTimelinePhotoData
         let userMessage = ConversationMessage(
             role: "user",
             content: question,
-            timestamp: Date()
+            timestamp: Date(),
+            photoData: photoData
         )
         conversationMessages.append(userMessage)
         
@@ -322,7 +325,8 @@ struct AIPlantQuestionView: View {
                         conversationMessages.append(ConversationMessage(
                             role: "assistant",
                             content: response.answer,
-                            timestamp: Date()
+                            timestamp: Date(),
+                            photoData: nil
                         ))
                         pendingResponse = nil
                     }
@@ -551,7 +555,20 @@ struct ConversationBubble: View {
                     .frame(width: 32)
             }
             
-            VStack(alignment: message.role == "user" ? .trailing : .leading, spacing: 4) {
+            VStack(alignment: message.role == "user" ? .trailing : .leading, spacing: 8) {
+                // Show photo if available
+                if let photoData = message.photoData,
+                   let uiImage = UIImage(data: photoData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: 200, maxHeight: 200)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                }
                 Text(message.content)
                     .font(.body)
                     .padding(.horizontal, 14)

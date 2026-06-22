@@ -316,5 +316,10 @@ struct AppSettings: Codable {
     var openAIAPIKey: String = ""
     var hideFutureCareStepsDays: Int = 5
     
+    // AI Feature Toggles
+    var aiEnquiriesEnabled: Bool = true
+    var aiAddPlantEnabled: Bool = true
+    var aiHealthCheckEnabled: Bool = true
+    
     init() {}
 }

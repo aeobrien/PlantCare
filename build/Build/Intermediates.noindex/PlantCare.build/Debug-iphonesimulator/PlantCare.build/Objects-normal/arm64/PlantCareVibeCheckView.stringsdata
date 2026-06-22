@@ -1,0 +1,168 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantCareVibeCheckView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Plant Care Vibe Check",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "Error",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 187
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI Assessment",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "Suggested Changes",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "Review each suggestion below:",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "Accepted Changes (%lld)",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@: %@",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Everything looks great!",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 104
+        }
+      },
+      {
+        "comment": "",
+        "key": "No changes recommended at this time.",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 108
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apply %lld Changes",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 126
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Care Vibe Check",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 144
+        }
+      },
+      {
+        "comment": "",
+        "key": "Let AI review your plant care settings and suggest improvements",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start Vibe Check",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 157
+        }
+      },
+      {
+        "comment": "",
+        "key": "Close",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 174
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 181
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 188
+        }
+      },
+      {
+        "comment": "",
+        "key": "Current:",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 360
+        }
+      },
+      {
+        "comment": "",
+        "key": "Suggested:",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 371
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reason:",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 382
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyzing your plants...",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 427
+        }
+      }
+    ]
+  },
+  "version": 1
+}

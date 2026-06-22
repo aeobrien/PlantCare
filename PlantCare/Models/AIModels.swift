@@ -140,4 +140,5 @@ struct ConversationMessage: Codable {
     let role: String
     let content: String
     let timestamp: Date
+    var photoData: Data?
 }

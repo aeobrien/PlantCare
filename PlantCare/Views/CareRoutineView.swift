@@ -4,11 +4,16 @@ import UIKit
 struct CareRoutineView: View {
     @EnvironmentObject var dataStore: DataStore
     @Environment(\.dismiss) var dismiss
-    @State private var currentSpaceIndex = 0
+    @SceneStorage("careRoutine.currentSpaceIndex") private var currentSpaceIndex = 0
+    @SceneStorage("careRoutine.completedCareSteps") private var completedCareStepsData = Data()
+    @SceneStorage("careRoutine.plantsWithPhotos") private var plantsWithPhotosData = Data()
+    @SceneStorage("careRoutine.isActive") private var wasRoutineActive = false
     @State private var completedCareSteps: Set<String> = []
     @State private var showingCompletion = false
     @State private var plantsWithPhotos: Set<UUID> = []
     @State private var showingHealthCheck = false
+    @State private var showingResumePrompt = false
+    @State private var isRunningBackgroundHealthCheck = false
     
     enum SpaceType {
         case room(Room)
@@ -93,7 +98,13 @@ struct CareRoutineView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Done") {
-                            if !plantsWithPhotos.isEmpty && dataStore.settings.openAIAPIKey.isEmpty == false {
+                            // Clear persisted state immediately when completing
+                            wasRoutineActive = false
+                            completedCareStepsData = Data()
+                            plantsWithPhotosData = Data()
+                            currentSpaceIndex = 0
+                            
+                            if !plantsWithPhotos.isEmpty && dataStore.settings.openAIAPIKey.isEmpty == false && dataStore.settings.aiHealthCheckEnabled {
                                 showingHealthCheck = true
                             } else {
                                 endRoutine()
@@ -154,13 +165,63 @@ struct CareRoutineView: View {
             }
         }
         .onAppear {
-            dataStore.startCareSession()
+            loadPersistedState()
+            // Only show resume prompt if routine was active and not on completion screen
+            if wasRoutineActive && !completedCareSteps.isEmpty && !showingCompletion && currentSpaceIndex < allSpaces.count {
+                showingResumePrompt = true
+            } else {
+                // Start fresh routine
+                completedCareSteps = []
+                plantsWithPhotos = []
+                currentSpaceIndex = 0
+                dataStore.startCareSession()
+                wasRoutineActive = true
+            }
+        }
+        .onChange(of: completedCareSteps) {
+            savePersistedState()
+        }
+        .onChange(of: plantsWithPhotos) {
+            savePersistedState()
+        }
+        .onChange(of: currentSpaceIndex) {
+            savePersistedState()
+        }
+        .alert("Resume Previous Session?", isPresented: $showingResumePrompt) {
+            Button("Resume") {
+                dataStore.startCareSession()
+                // Restore completed steps to current session
+                for stepKey in completedCareSteps {
+                    let components = stepKey.split(separator: "-")
+                    if components.count == 2,
+                       let plantID = UUID(uuidString: String(components[0])),
+                       let careStepID = UUID(uuidString: String(components[1])) {
+                        dataStore.markCareStepCompleted(plantID: plantID, careStepID: careStepID)
+                    }
+                }
+            }
+            Button("Start New") {
+                completedCareSteps = []
+                plantsWithPhotos = []
+                currentSpaceIndex = 0
+                dataStore.startCareSession()
+                wasRoutineActive = true
+            }
+        } message: {
+            Text("You have an unfinished care routine. Would you like to continue where you left off?")
         }
         .sheet(isPresented: $showingHealthCheck) {
-            PlantHealthCheckView(plantsWithPhotos: plantsWithPhotos)
+            BatchHealthCheckView(plantsWithPhotos: plantsWithPhotos)
                 .environmentObject(dataStore)
                 .onDisappear {
                     endRoutine()
+                }
+        }
+        .sheet(isPresented: $isRunningBackgroundHealthCheck) {
+            BatchHealthCheckView(plantsWithPhotos: plantsWithPhotos, isBackgroundMode: true)
+                .environmentObject(dataStore)
+                .onDisappear {
+                    dismiss()
                 }
         }
     }
@@ -184,25 +245,100 @@ struct CareRoutineView: View {
     }
     
     func nextSpace() {
+        // Save current room progress before moving to next
+        saveCurrentRoomProgress()
+        
         withAnimation {
             currentSpaceIndex = min(allSpaces.count - 1, currentSpaceIndex + 1)
         }
     }
     
     func completeRoutine() {
+        // Clear the routine active flag immediately when reaching completion screen
+        wasRoutineActive = false
+        savePersistedState()
+        
         withAnimation {
             showingCompletion = true
         }
     }
     
     func cancelRoutine() {
+        // Don't save any remaining progress when cancelling
         dataStore.endCareSession()
+        // Clear persisted state
+        wasRoutineActive = false
+        completedCareStepsData = Data()
+        plantsWithPhotosData = Data()
+        currentSpaceIndex = 0
         dismiss()
     }
     
+    func saveCurrentRoomProgress() {
+        // Apply completed care steps from current room immediately
+        if let session = dataStore.currentCareSession {
+            let currentSpacePlantIDs = Set(plantsInCurrentSpace.map { $0.id })
+            let currentSpaceCompletedSteps = session.completedCareSteps.filter { currentSpacePlantIDs.contains($0.plantID) }
+            
+            for completedStep in currentSpaceCompletedSteps {
+                if let plantIndex = dataStore.plants.firstIndex(where: { $0.id == completedStep.plantID }) {
+                    dataStore.plants[plantIndex].markCareStepCompleted(withId: completedStep.careStepID, date: completedStep.completedDate)
+                }
+            }
+            
+            if !currentSpaceCompletedSteps.isEmpty {
+                dataStore.saveData()
+            }
+        }
+    }
+    
     func endRoutine() {
+        // Save any remaining progress
+        saveCurrentRoomProgress()
         dataStore.endCareSession()
-        dismiss()
+        
+        // Run background health checks if there are photos and AI is enabled
+        if !plantsWithPhotos.isEmpty && dataStore.settings.openAIAPIKey.isEmpty == false && dataStore.settings.aiHealthCheckEnabled {
+            isRunningBackgroundHealthCheck = true
+        }
+        
+        // Clear all state completely
+        completedCareSteps = []
+        plantsWithPhotos = []
+        currentSpaceIndex = 0
+        wasRoutineActive = false
+        completedCareStepsData = Data()
+        plantsWithPhotosData = Data()
+        showingCompletion = false
+        
+        // If not running background health check, dismiss immediately
+        if !isRunningBackgroundHealthCheck {
+            dismiss()
+        }
+    }
+    
+    func savePersistedState() {
+        // Convert sets to arrays for encoding
+        let stepsArray = Array(completedCareSteps)
+        let photosArray = Array(plantsWithPhotos)
+        
+        if let stepsData = try? JSONEncoder().encode(stepsArray) {
+            completedCareStepsData = stepsData
+        }
+        if let photosData = try? JSONEncoder().encode(photosArray) {
+            plantsWithPhotosData = photosData
+        }
+    }
+    
+    func loadPersistedState() {
+        // Load completed care steps
+        if let stepsArray = try? JSONDecoder().decode([String].self, from: completedCareStepsData) {
+            completedCareSteps = Set(stepsArray)
+        }
+        // Load plants with photos
+        if let photosArray = try? JSONDecoder().decode([UUID].self, from: plantsWithPhotosData) {
+            plantsWithPhotos = Set(photosArray)
+        }
     }
 }
 
@@ -234,7 +370,7 @@ struct ProgressHeader: View {
     let totalCareSteps: Int
     
     var progress: Double {
-        totalCareSteps > 0 ? Double(completedCareSteps) / Double(totalCareSteps) : 0
+        totalSpaces > 0 ? Double(currentSpace - 1) / Double(totalSpaces) : 0
     }
     
     var body: some View {
@@ -427,6 +563,7 @@ struct PlantHeader: View {
     let hasPhoto: Bool
     @Binding var showingAIQuestion: Bool
     @Binding var showingImagePicker: Bool
+    @EnvironmentObject var dataStore: DataStore
     
     var body: some View {
         HStack {
@@ -469,12 +606,14 @@ struct PlantHeader: View {
                     }
                 }
                 
-                Button(action: {
-                    showingAIQuestion = true
-                }) {
-                    Image(systemName: "sparkles")
-                        .font(.title3)
-                        .foregroundColor(.blue)
+                if dataStore.settings.aiEnquiriesEnabled {
+                    Button(action: {
+                        showingAIQuestion = true
+                    }) {
+                        Image(systemName: "sparkles")
+                            .font(.title3)
+                            .foregroundColor(.blue)
+                    }
                 }
             }
         }

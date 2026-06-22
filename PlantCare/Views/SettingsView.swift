@@ -43,6 +43,54 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 }
                 
+                Section(header: Text("AI Features")) {
+                    Toggle(isOn: $settings.aiEnquiriesEnabled) {
+                        HStack {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.blue)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("AI Plant Enquiries")
+                                Text("Ask questions about your plants")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    
+                    Toggle(isOn: $settings.aiAddPlantEnabled) {
+                        HStack {
+                            Image(systemName: "leaf.arrow.circlepath")
+                                .foregroundColor(.green)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Add Plants via AI")
+                                Text("Create plants from photos")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    
+                    Toggle(isOn: $settings.aiHealthCheckEnabled) {
+                        HStack {
+                            Image(systemName: "heart.text.square")
+                                .foregroundColor(.red)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("AI Health Checks")
+                                Text("Analyze plant health from photos")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    
+                    if !settings.aiEnquiriesEnabled && !settings.aiAddPlantEnabled && !settings.aiHealthCheckEnabled {
+                        Text("All AI features are disabled")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .italic()
+                    }
+                }
+                
                 Section(header: Text("Care Routine Settings")) {
                     VStack(alignment: .leading, spacing: 12) {
                         VStack(alignment: .leading, spacing: 8) {
@@ -194,6 +242,18 @@ struct SettingsView: View {
                 saveSettings()
             }
             .onChange(of: settings.openAIAPIKey) { _ in
+                saveSettings()
+            }
+            .onChange(of: settings.hideFutureCareStepsDays) { _ in
+                saveSettings()
+            }
+            .onChange(of: settings.aiEnquiriesEnabled) { _ in
+                saveSettings()
+            }
+            .onChange(of: settings.aiAddPlantEnabled) { _ in
+                saveSettings()
+            }
+            .onChange(of: settings.aiHealthCheckEnabled) { _ in
                 saveSettings()
             }
             .sheet(isPresented: $showingVibeCheck) {

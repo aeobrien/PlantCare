@@ -374,9 +374,11 @@ struct AddPlantView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Button(action: { showingAIAdd = true }) {
-                        Label("Add via AI", systemImage: "sparkles")
-                            .labelStyle(.titleAndIcon)
+                    if dataStore.settings.aiAddPlantEnabled {
+                        Button(action: { showingAIAdd = true }) {
+                            Label("Add via AI", systemImage: "sparkles")
+                                .labelStyle(.titleAndIcon)
+                        }
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {

@@ -30,6 +30,7 @@ A comprehensive iOS app for managing a plant collection with intelligent care re
 |---------|-------------|-------|
 
 ## Status
+**Lane:** personal
 **Phase:** Active / maintenance
 **Current focus:** Ongoing use and incremental improvements
 **Last updated:** 2026-04-04

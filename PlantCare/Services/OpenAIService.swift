@@ -1,8 +1,8 @@
 import Foundation
 
-class OpenAIService {
+public class OpenAIService {
     static let shared = OpenAIService()
-    private init() {}
+    public init() {}
     
     private let baseURL = "https://api.openai.com/v1/chat/completions"
     
@@ -391,7 +391,7 @@ class OpenAIService {
         return questionResponse
     }
     
-    func identifyPlant(from imageData: Data, apiKey: String) async throws -> String {
+    public func identifyPlant(from imageData: Data, apiKey: String) async throws -> String {
         let base64Image = imageData.base64EncodedString()
         let imageUrl = "data:image/jpeg;base64,\(base64Image)"
         

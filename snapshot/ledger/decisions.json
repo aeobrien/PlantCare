@@ -1,0 +1,38 @@
+[
+  {
+    "add": "",
+    "dropped": [],
+    "kept": [
+      {
+        "effort": "exists",
+        "label": "Backup archive",
+        "surface": "file",
+        "what": "Exchange full plant-library snapshots through the app's backup files containing plants, rooms, zones, photos, and settings.",
+        "why": "`BackupService.swift` defines a complete `BackupData` archive and saves `.plantcarebackup` files"
+      },
+      {
+        "effort": "exists",
+        "label": "Clipboard import",
+        "surface": "file",
+        "what": "Feed batches of plants into the app using its simple text import format of plant name plus location.",
+        "why": "the README documents bulk import from clipboard with `Plant Name, Location` lines"
+      },
+      {
+        "effort": "wrapper",
+        "label": "Care reminders feed",
+        "surface": "import",
+        "what": "Expose overdue care work to another system by wrapping the existing overdue-step and notification scheduling logic.",
+        "why": "`NotificationManager.swift` already computes overdue care steps and builds reminder content"
+      },
+      {
+        "effort": "wrapper",
+        "label": "AI plant analysis",
+        "surface": "import",
+        "what": "Call the existing plant-identification and care-analysis service from a thin endpoint or helper script.",
+        "why": "the codebase includes `OpenAIService.swift` plus AI add, Q&A, vibe-check, and health-check views"
+      }
+    ],
+    "project": "PlantCare",
+    "tier": 3
+  }
+]

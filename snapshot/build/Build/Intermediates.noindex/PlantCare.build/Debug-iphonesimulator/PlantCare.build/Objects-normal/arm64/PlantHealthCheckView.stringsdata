@@ -1,0 +1,120 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantHealthCheckView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Health Check",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "Error",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "No Photos Taken",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "Take photos of your plants during the care routine to receive health feedback",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous feedback (%@)",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI Health Assessment",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 104
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyzing plant health...",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "Based on photos taken during care routine",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyze Plant Health",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 137
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "Next",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 175
+        }
+      },
+      {
+        "comment": "",
+        "key": "Finish",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Skip All",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 209
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 215
+        }
+      }
+    ]
+  },
+  "version": 1
+}

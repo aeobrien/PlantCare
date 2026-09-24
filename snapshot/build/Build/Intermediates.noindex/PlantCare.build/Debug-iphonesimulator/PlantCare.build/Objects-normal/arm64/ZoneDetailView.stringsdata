@@ -1,0 +1,136 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ZoneDetailView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Zone Details",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "Aspect",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 23
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sun Period",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 31
+        }
+      },
+      {
+        "comment": "",
+        "key": "Wind Exposure",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "(estimated)",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sun Hours",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 47
+        }
+      },
+      {
+        "comment": "",
+        "key": "No plants assigned to this zone yet",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 78
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plants in this zone",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 72
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 93
+        }
+      },
+      {
+        "comment": "",
+        "key": "Move",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 100
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add/Move Plants Here",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 108
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 131
+        }
+      },
+      {
+        "comment": "",
+        "key": "• Overdue by %lld day%@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 168
+        }
+      },
+      {
+        "comment": "",
+        "key": "• Due today",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 172
+        }
+      },
+      {
+        "comment": "",
+        "key": "• Due in %lld day%@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 176
+        }
+      }
+    ]
+  },
+  "version": 1
+}

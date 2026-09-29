@@ -1,0 +1,136 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantChangeReviewView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Review Changes",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 176
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apply Changes?",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 185
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI has suggested the following changes for %@:",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select All",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 137
+        }
+      },
+      {
+        "comment": "",
+        "key": "Deselect All",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 149
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apply Selected Changes",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 180
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apply",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 187
+        }
+      },
+      {
+        "comment": "",
+        "key": "Are you sure you want to apply the selected changes to %@?",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Current:",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 338
+        }
+      },
+      {
+        "comment": "",
+        "key": "Suggested:",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 351
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Steps",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 424
+        }
+      },
+      {
+        "comment": "",
+        "key": "Every %lld days",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 476
+        }
+      },
+      {
+        "comment": "",
+        "key": "(Update)",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 463
+        }
+      },
+      {
+        "comment": "",
+        "key": "(New)",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 463
+        }
+      }
+    ]
+  },
+  "version": 1
+}

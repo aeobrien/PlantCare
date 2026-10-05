@@ -1,0 +1,184 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ForceHealthCheckView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Health Check All Plants",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 292
+        }
+      },
+      {
+        "comment": "",
+        "key": "Error",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 301
+        }
+      },
+      {
+        "comment": "",
+        "key": "No Plants with Photos",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 41
+        }
+      },
+      {
+        "comment": "",
+        "key": "Take photos of your plants to enable health check analysis",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant %lld of %lld",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 56
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld analyzed",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "📍 %@",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 91
+        }
+      },
+      {
+        "comment": "",
+        "key": "🌳 %@",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "Latest photo from %@",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous feedback (%@)",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 141
+        }
+      },
+      {
+        "comment": "",
+        "key": "New Health Assessment",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 163
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyzing plant health...",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 179
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyze Health",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 192
+        }
+      },
+      {
+        "comment": "",
+        "key": "Skip This Plant",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 221
+        }
+      },
+      {
+        "comment": "",
+        "key": "Next",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 234
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save & Finish",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "Health Check Complete",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 269
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyzed %lld of %lld plants",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 273
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 280
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 296
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 302
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,208 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ImportPlantsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Import Plants",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import Error",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 65
+        }
+      },
+      {
+        "comment": "",
+        "key": "Importing...",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import Plants from JSON",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 218
+        }
+      },
+      {
+        "comment": "",
+        "key": "Paste your JSON data below or copy it to your clipboard first",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "JSON Format:",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "[{\n  \"name\": \"Plant Name\",\n  \"room\": \"Room Name\",\n  \"windowDirection\": \"northeast\",\n  \"preferredLightDirection\": \"east\",\n  \"lightType\": \"indirect\",\n  \"wateringInstructions\": \"Water weekly\",\n  \"careNotes\": \"Additional notes\"\n}]",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 233
+        }
+      },
+      {
+        "comment": "",
+        "key": "Paste from Clipboard",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 260
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 266
+        }
+      },
+      {
+        "comment": "",
+        "key": "Unknown Room",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 303
+        }
+      },
+      {
+        "comment": "",
+        "key": "The room \"%@\" doesn't exist",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 308
+        }
+      },
+      {
+        "comment": "",
+        "key": "What would you like to do?",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 317
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select Room",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 329
+        }
+      },
+      {
+        "comment": "",
+        "key": "Choose a room",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 330
+        }
+      },
+      {
+        "comment": "",
+        "key": "Continue",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 362
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ready to Import",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 416
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld plants will be imported",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 421
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld new room%@ will be created",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 425
+        }
+      },
+      {
+        "comment": "",
+        "key": "Room Mappings",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 437
+        }
+      },
+      {
+        "comment": "",
+        "key": "New Room",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 446
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plants to Import",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 463
+        }
+      },
+      {
+        "comment": "",
+        "key": "Back",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 497
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import Plants",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 506
+        }
+      }
+    ]
+  },
+  "version": 1
+}

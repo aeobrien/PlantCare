@@ -1,0 +1,24 @@
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/SortOptions.swift":
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.dia"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.d"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SortOptions.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Models/Models.swift":
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.dia"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.swiftconstvalues"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.d"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.swiftdeps"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/Models.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantsListView.swift":
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.dia"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.swiftdeps"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.o"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantsListView.d"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AddPlantsToSpaceView.swift":
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.o"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.d"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.swiftconstvalues"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/AddPlantsToSpaceView.swiftdeps"

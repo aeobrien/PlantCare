@@ -1,0 +1,30 @@
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ImagePicker.swift":
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.swiftconstvalues"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.d"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ImagePicker.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Store/NotificationManager.swift":
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.swiftconstvalues"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.o"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.d"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/NotificationManager.dia"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/UpdateWateringInstructionsView.swift":
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.dia"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.swiftconstvalues"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.d"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/UpdateWateringInstructionsView.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Store/DataStore.swift":
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.swiftdeps"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.dia"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.d"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/DataStore.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ZoneDetailView.swift":
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.dia"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.swiftconstvalues"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.d"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.swiftdeps"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ZoneDetailView.o"

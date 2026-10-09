@@ -1,0 +1,136 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/UpdateWateringInstructionsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Update Watering",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "Update Watering Instructions",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 24
+        }
+      },
+      {
+        "comment": "",
+        "key": "This process will use AI to analyze each plant and may take a few minutes.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 43
+        }
+      },
+      {
+        "comment": "",
+        "key": "This will update the watering instructions for all your plants to include:",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 29
+        }
+      },
+      {
+        "comment": "",
+        "key": "Specific indicators for when to water",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 34
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear guidance on how much water to use",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 35
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start Update",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "Updating: %@",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld of %lld plants processed",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "Update Complete",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 81
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 111
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld plants updated successfully",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 86
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld plants had errors",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 90
+        }
+      },
+      {
+        "comment": "",
+        "key": "Errors:",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "• %@",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 125
+        }
+      }
+    ]
+  },
+  "version": 1
+}

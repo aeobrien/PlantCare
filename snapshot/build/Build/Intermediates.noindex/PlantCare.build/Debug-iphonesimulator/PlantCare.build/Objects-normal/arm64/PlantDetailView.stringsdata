@@ -1,0 +1,584 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantDetailView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Plant Not Found",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 256
+        }
+      },
+      {
+        "comment": "",
+        "key": "Visual Description",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "No care steps configured",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 143
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tap the + button to add care steps",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "Record %@",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 199
+        }
+      },
+      {
+        "comment": "",
+        "key": "Record Care",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 207
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 235
+        }
+      },
+      {
+        "comment": "",
+        "key": "Duplicate",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 239
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 242
+        }
+      },
+      {
+        "comment": "",
+        "key": "Every %lld days",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 365
+        }
+      },
+      {
+        "comment": "",
+        "key": "Never completed",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 383
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last: %@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 379
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit Plant",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 553
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Information",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 439
+        }
+      },
+      {
+        "comment": "",
+        "key": "Location",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 458
+        }
+      },
+      {
+        "comment": "",
+        "key": "Environment",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 540
+        }
+      },
+      {
+        "comment": "",
+        "key": "General Notes",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 548
+        }
+      },
+      {
+        "comment": "",
+        "key": "Common Name",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 440
+        }
+      },
+      {
+        "comment": "",
+        "key": "Latin Name (optional)",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 441
+        }
+      },
+      {
+        "comment": "",
+        "key": "Visual Description (optional)",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 442
+        }
+      },
+      {
+        "comment": "",
+        "key": "Light Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 445
+        }
+      },
+      {
+        "comment": "",
+        "key": "Preferred Light Direction",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 451
+        }
+      },
+      {
+        "comment": "",
+        "key": "Space Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 459
+        }
+      },
+      {
+        "comment": "",
+        "key": "Room",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 474
+        }
+      },
+      {
+        "comment": "",
+        "key": "Window",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 493
+        }
+      },
+      {
+        "comment": "",
+        "key": "Outdoor Zone",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 501
+        }
+      },
+      {
+        "comment": "",
+        "key": "Indoor",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 460
+        }
+      },
+      {
+        "comment": "",
+        "key": "Outdoor",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 461
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 475
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 494
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 502
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Steps",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 512
+        }
+      },
+      {
+        "comment": "",
+        "key": "No care steps configured",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 520
+        }
+      },
+      {
+        "comment": "",
+        "key": "Humidity Preference",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 541
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 557
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 562
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 630
+        }
+      },
+      {
+        "comment": "",
+        "key": "Every %lld days",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 623
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 642
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Care Step",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 704
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Step Type",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 668
+        }
+      },
+      {
+        "comment": "",
+        "key": "Instructions",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 685
+        }
+      },
+      {
+        "comment": "",
+        "key": "Frequency",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 690
+        }
+      },
+      {
+        "comment": "",
+        "key": "Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 669
+        }
+      },
+      {
+        "comment": "",
+        "key": "Custom name",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 681
+        }
+      },
+      {
+        "comment": "",
+        "key": "Every",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 692
+        }
+      },
+      {
+        "comment": "",
+        "key": "days",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 700
+        }
+      },
+      {
+        "comment": "",
+        "key": "Days",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 693
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 695
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 708
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 713
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit Care Step",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 795
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Step Type",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 743
+        }
+      },
+      {
+        "comment": "",
+        "key": "Instructions",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 763
+        }
+      },
+      {
+        "comment": "",
+        "key": "Frequency",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 768
+        }
+      },
+      {
+        "comment": "",
+        "key": "Status",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 782
+        }
+      },
+      {
+        "comment": "",
+        "key": "Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 744
+        }
+      },
+      {
+        "comment": "",
+        "key": "Custom name",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 756
+        }
+      },
+      {
+        "comment": "",
+        "key": "Every",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 770
+        }
+      },
+      {
+        "comment": "",
+        "key": "days",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 778
+        }
+      },
+      {
+        "comment": "",
+        "key": "Days",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 771
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 773
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enabled",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 783
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last Completed",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 787
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 799
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 804
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Not Found",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 830
+        }
+      },
+      {
+        "comment": "",
+        "key": "No photos yet",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 862
+        }
+      },
+      {
+        "comment": "",
+        "key": "Photo Details",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 982
+        }
+      },
+      {
+        "comment": "",
+        "key": "Notes:",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 968
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 986
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 992
+        }
+      }
+    ]
+  },
+  "version": 1
+}

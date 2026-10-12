@@ -1,0 +1,304 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/PlantsListView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Search plants",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plants",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "Duplicate",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "Duplicate",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sort By",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 88
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sort",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Plant",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "Import from Clipboard",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "•",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 200
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld overdue",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 217
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ today",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 224
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ tomorrow",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ in %lldd",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 233
+        }
+      },
+      {
+        "comment": "",
+        "key": "No care steps",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 239
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Plant",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 368
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Information",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 286
+        }
+      },
+      {
+        "comment": "",
+        "key": "Location",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 305
+        }
+      },
+      {
+        "comment": "",
+        "key": "Environment",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 355
+        }
+      },
+      {
+        "comment": "",
+        "key": "General Notes",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 363
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Name",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 287
+        }
+      },
+      {
+        "comment": "",
+        "key": "Latin Name (optional)",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 288
+        }
+      },
+      {
+        "comment": "",
+        "key": "Visual Description (optional)",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 289
+        }
+      },
+      {
+        "comment": "",
+        "key": "Light Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 292
+        }
+      },
+      {
+        "comment": "",
+        "key": "Preferred Light Direction",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 298
+        }
+      },
+      {
+        "comment": "",
+        "key": "Space Type",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 306
+        }
+      },
+      {
+        "comment": "",
+        "key": "Indoor Space",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 319
+        }
+      },
+      {
+        "comment": "",
+        "key": "Window",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 338
+        }
+      },
+      {
+        "comment": "",
+        "key": "Outdoor Zone",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 346
+        }
+      },
+      {
+        "comment": "",
+        "key": "Indoor",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 307
+        }
+      },
+      {
+        "comment": "",
+        "key": "Outdoor",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 308
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 320
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 339
+        }
+      },
+      {
+        "comment": "",
+        "key": "None",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 347
+        }
+      },
+      {
+        "comment": "",
+        "key": "Humidity Preference",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 356
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 372
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add via AI",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 379
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 385
+        }
+      }
+    ]
+  },
+  "version": 1
+}

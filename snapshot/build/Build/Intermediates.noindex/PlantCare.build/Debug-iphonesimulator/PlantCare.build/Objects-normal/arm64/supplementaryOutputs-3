@@ -1,0 +1,30 @@
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/SettingsView.swift":
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.d"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.swiftdeps"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.dia"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.swiftconstvalues"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SettingsView.o"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Services/PlantCareBackupDocument.swift":
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.swiftdeps"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.o"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.d"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/PlantCareBackupDocument.swiftconstvalues"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/SpacesListView.swift":
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.o"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.swiftconstvalues"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.d"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/SpacesListView.dia"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/ForceHealthCheckView.swift":
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.d"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.o"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/ForceHealthCheckView.swiftdeps"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/EditZoneView.swift":
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.swiftconstvalues"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.o"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.swiftdeps"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.d"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/EditZoneView.dia"

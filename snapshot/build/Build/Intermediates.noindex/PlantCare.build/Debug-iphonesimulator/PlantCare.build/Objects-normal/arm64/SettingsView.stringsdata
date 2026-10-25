@@ -1,0 +1,488 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/SettingsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Settings",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 236
+        }
+      },
+      {
+        "comment": "",
+        "key": "API Settings",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI Features",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Routine Settings",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 94
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Care Review",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 143
+        }
+      },
+      {
+        "comment": "",
+        "key": "Care Routine Room Order",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "OpenAI API Key",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "Required for AI-powered plant recommendations",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 23
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enter your API key",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 27
+        }
+      },
+      {
+        "comment": "",
+        "key": "API key saved",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "All AI features are disabled",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI Plant Enquiries",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ask questions about your plants",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Plants via AI",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 65
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create plants from photos",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "AI Health Checks",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 78
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyze plant health from photos",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 79
+        }
+      },
+      {
+        "comment": "",
+        "key": "Early completion warning",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "Show red warning when completing care steps more than %lld days early",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 100
+        }
+      },
+      {
+        "comment": "",
+        "key": "Days",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "Warning Days",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "Hide future care steps",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "Hide care steps not due for more than %lld days in care routine",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 122
+        }
+      },
+      {
+        "comment": "",
+        "key": "Days",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 127
+        }
+      },
+      {
+        "comment": "",
+        "key": "Hide Future Days",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 131
+        }
+      },
+      {
+        "comment": "",
+        "key": "Plant Care Vibe Check",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "Let AI review and optimize your plant care settings",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "Health Check All Plants",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 171
+        }
+      },
+      {
+        "comment": "",
+        "key": "Analyze health of all plants with photos",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 173
+        }
+      },
+      {
+        "comment": "",
+        "key": "Update Watering Instructions",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Improve watering guidance for all plants (one-time)",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "Drag to reorder rooms for care routines",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset to Default Order",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld plants",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 219
+        }
+      },
+      {
+        "comment": "",
+        "key": "iCloud Backup",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 331
+        }
+      },
+      {
+        "comment": "",
+        "key": "Backup Error",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 395
+        }
+      },
+      {
+        "comment": "",
+        "key": "iCloud Status",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 335
+        }
+      },
+      {
+        "comment": "",
+        "key": "Available",
+        "location": {
+          "startingColumn": 66,
+          "startingLine": 341
+        }
+      },
+      {
+        "comment": "",
+        "key": "Not Available",
+        "location": {
+          "startingColumn": 80,
+          "startingLine": 341
+        }
+      },
+      {
+        "comment": "",
+        "key": "Last backup: %@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 360
+        }
+      },
+      {
+        "comment": "",
+        "key": "Backup Now",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 372
+        }
+      },
+      {
+        "comment": "",
+        "key": "View Backups",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 383
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 396
+        }
+      },
+      {
+        "comment": "",
+        "key": "Backups",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 445
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restore Backup",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 459
+        }
+      },
+      {
+        "comment": "",
+        "key": "Error",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 471
+        }
+      },
+      {
+        "comment": "",
+        "key": "No backups available",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 431
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 449
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restore",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 460
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 465
+        }
+      },
+      {
+        "comment": "",
+        "key": "Are you sure you want to restore this backup from %@? This will replace all current data.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 468
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 472
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restoring backup...",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 484
+        }
+      },
+      {
+        "comment": "",
+        "key": "Restore",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 542
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 550
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 551
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 552
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 553
+        }
+      }
+    ]
+  },
+  "version": 1
+}

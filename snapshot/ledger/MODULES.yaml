@@ -1,0 +1,261 @@
+project_shape:
+  scale: multi-subsystem
+  has_subsystem_layer: true
+  expected_modules: "8-12"
+  kind: product
+
+modules:
+  - id: plantcare.space-management.space-catalog
+    project: PlantCare
+    subsystem: Space Management
+    name: Space catalog
+    capability: Manages the indoor room and outdoor zone inventory, including ordering and environmental metadata.
+    status: working
+    approach: Uses Codable room and zone models stored in a shared ObservableObject with SwiftUI CRUD and drag-reorder views.
+    tech: [SwiftUI, Foundation, Combine, UserDefaults]
+    io:
+      in: "Room and zone edits, window definitions, sort/reorder actions"
+      out: "Persisted room and zone lists used across the app"
+    code_refs:
+      - "PlantCare/Models/Models.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/Views/SpacesListView.swift"
+      - "PlantCare/Views/RoomsListView.swift"
+      - "PlantCare/Views/RoomDetailView.swift"
+      - "PlantCare/Views/AddZoneView.swift"
+      - "PlantCare/Views/EditZoneView.swift"
+      - "PlantCare/Views/ZoneDetailView.swift"
+    known_gaps:
+      - "Deleting a room or zone silently unassigns affected plants rather than guiding the user through reassignment."
+      - "No subsystem-specific tests exist beyond template app/unit test stubs."
+    match_keywords: [room management, zone management, location catalog, indoor outdoor spaces, plant locations]
+
+  - id: plantcare.space-management.plant-relocation
+    project: PlantCare
+    subsystem: Space Management
+    name: Plant placement and relocation
+    capability: Assigns plants to rooms, windows, or outdoor zones and supports moving plants between spaces.
+    status: working
+    approach: Stores room, zone, and window IDs on each Plant and updates them through SwiftUI move and add-to-space flows backed by DataStore writes.
+    tech: [SwiftUI, Foundation, Combine]
+    io:
+      in: "Plant placement choices, move actions, selected room/zone/window IDs"
+      out: "Updated plant-to-space assignments"
+    code_refs:
+      - "PlantCare/Models/Models.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/Views/MovePlantSheet.swift"
+      - "PlantCare/Views/AddPlantsToSpaceView.swift"
+      - "PlantCare/Views/PlantDetailView.swift"
+      - "PlantCare/Views/RoomDetailView.swift"
+      - "PlantCare/Views/ZoneDetailView.swift"
+    known_gaps:
+      - "Placement is ID-based local state only; there is no validation layer preventing weak or missing placements after deletions."
+      - "No audit trail exists for plant moves."
+    match_keywords: [plant placement, move plants, room assignment, zone assignment, window assignment]
+
+  - id: plantcare.plant-profiles.profile-registry
+    project: PlantCare
+    subsystem: Plant Profiles
+    name: Plant profile registry
+    capability: Stores plant records, care-step definitions, settings, and plant editing flows including duplication.
+    status: working
+    approach: Uses Codable domain models persisted through UserDefaults in a singleton DataStore and edited via SwiftUI list and detail screens.
+    tech: [SwiftUI, Foundation, Combine, UserDefaults]
+    io:
+      in: "Plant CRUD actions, care-step edits, settings edits, duplication requests"
+      out: "Persisted plant profiles, care metadata, and app settings"
+    code_refs:
+      - "PlantCare/Models/Models.swift"
+      - "PlantCare/Models/SortOptions.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/Views/PlantsListView.swift"
+      - "PlantCare/Views/PlantDetailView.swift"
+      - "PlantCare/Views/SettingsView.swift"
+    known_gaps:
+      - "App settings, including the OpenAI API key, are persisted in UserDefaults rather than a secure credential store."
+      - "If old plant data cannot be decoded, migration falls back to default sample plants instead of preserving recoverable user data."
+      - "The automated test targets are still template placeholders."
+    match_keywords: [plant database, plant profiles, care step editor, plant inventory, settings persistence]
+
+  - id: plantcare.plant-profiles.photo-timeline
+    project: PlantCare
+    subsystem: Plant Profiles
+    name: Photo timeline
+    capability: Captures, stores, displays, and deletes timestamped plant photos for timelines and AI health analysis.
+    status: partial
+    approach: Saves image files under the app documents directory and keeps PlantPhoto metadata in the shared DataStore for SwiftUI timeline views.
+    tech: [SwiftUI, UIKit, PhotosUI, Foundation, UserDefaults]
+    io:
+      in: "Camera or picker images, plant IDs, optional notes"
+      out: "Plant photo files plus timeline metadata and health-check inputs"
+    code_refs:
+      - "PlantCare/Models/Models.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/Views/ImagePicker.swift"
+      - "PlantCare/Views/PlantDetailView.swift"
+      - "PlantCare/Views/AIPlantQuestionView.swift"
+      - "PlantCare/Views/CareRoutineView.swift"
+      - "PlantCare/Views/PlantHealthCheckView.swift"
+      - "PlantCare/Views/BatchHealthCheckView.swift"
+    known_gaps:
+      - "Backups capture PlantPhoto metadata but restore does not reconstruct the underlying image files."
+      - "Photo loading reads files directly into memory in view code with no caching or corruption recovery."
+    match_keywords: [photo timeline, plant photos, image journal, growth tracking, photo storage]
+
+  - id: plantcare.plant-profiles.bulk-import
+    project: PlantCare
+    subsystem: Plant Profiles
+    name: Bulk plant import
+    capability: Imports multiple plants from pasted structured data and maps unknown room names to existing or newly created rooms.
+    status: partial
+    approach: Decodes pasted JSON into ImportedPlant records, heuristically derives care defaults, and writes created rooms and plants through DataStore.
+    tech: [SwiftUI, Foundation, JSONDecoder]
+    io:
+      in: "Pasted JSON plant data and room-mapping choices"
+      out: "Created rooms and imported plant profiles with inferred care steps"
+    code_refs:
+      - "PlantCare/Models/ImportModels.swift"
+      - "PlantCare/Views/ImportPlantsView.swift"
+      - "PlantCare/Store/DataStore.swift"
+    known_gaps:
+      - "README documents a simple clipboard line format, but the implemented importer only accepts JSON."
+      - "New rooms created during import always get a default north-facing window."
+      - "Watering and rotation frequencies are inferred with simple string heuristics."
+    match_keywords: [bulk import, clipboard import, JSON import, room mapping, plant migration]
+
+  - id: plantcare.care-routines.care-scheduling
+    project: PlantCare
+    subsystem: Care Routines
+    name: Care scheduling and session flow
+    capability: Computes due care work, runs guided care sessions by space, and commits completed care steps to plant schedules.
+    status: partial
+    approach: Uses model-level due-date calculations plus a session object in DataStore, with SwiftUI screens persisting in-progress routine state via SceneStorage.
+    tech: [SwiftUI, Foundation, SceneStorage, Combine]
+    io:
+      in: "Care-step schedules, session toggles, routine navigation, care completion events"
+      out: "Due and overdue task views, persisted routine progress, updated last-completed timestamps"
+    code_refs:
+      - "PlantCare/Models/Models.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/Views/CareRoutineView.swift"
+      - "PlantCare/Views/PlantDetailView.swift"
+      - "PlantCare/ContentView.swift"
+    known_gaps:
+      - "The cancel path calls endCareSession(), which still applies completed steps despite the view comment saying cancellation should not save remaining progress."
+      - "Routine progress is persisted locally per scene, but there is no conflict handling if data changes underneath a resumed session."
+    match_keywords: [care routine, task scheduling, overdue reminders, guided checklist, recurring plant care]
+
+  - id: plantcare.care-routines.reminder-notifications
+    project: PlantCare
+    subsystem: Care Routines
+    name: Reminder notifications
+    capability: Schedules a daily local notification summarizing overdue plant care.
+    status: partial
+    approach: Uses UNUserNotificationCenter to request permission and maintain a single repeating 9:30 AM notification based on overdue care-step counts.
+    tech: [UserNotifications, SwiftUI, Foundation]
+    io:
+      in: "Notification permission state and overdue care-step snapshots from DataStore"
+      out: "Daily local notification request and badge count"
+    code_refs:
+      - "PlantCare/Store/NotificationManager.swift"
+      - "PlantCare/PlantCareApp.swift"
+      - "PlantCare/Store/DataStore.swift"
+    known_gaps:
+      - "Notification timing is hard-coded to 9:30 AM."
+      - "Only overdue work is notified; upcoming due-today work is not surfaced separately."
+      - "Tapping a notification does not deep-link into a care routine or plant."
+    match_keywords: [local notifications, reminder scheduler, overdue alerts, daily reminder, task notifications]
+
+  - id: plantcare.ai-features.ai-plant-onboarding
+    project: PlantCare
+    subsystem: AI Features
+    name: AI plant onboarding
+    capability: Identifies a plant from a photo and generates initial care and placement recommendations from the user’s available spaces.
+    status: partial
+    approach: Sends prompt-built chat completion requests, including optional base64 image content, to OpenAI and maps the JSON reply into app models.
+    tech: [OpenAI Chat Completions API, URLSession, JSONEncoder, JSONDecoder, SwiftUI, PhotosUI, UIKit]
+    io:
+      in: "Plant name or captured image, room and zone inventory, placement preference, OpenAI API key"
+      out: "Identified plant name and AI-generated plant profile recommendations"
+    code_refs:
+      - "PlantCare/Services/OpenAIService.swift"
+      - "PlantCare/Models/AIModels.swift"
+      - "PlantCare/Views/AIPlantAddView.swift"
+      - "PlantCare/Views/ImagePicker.swift"
+    known_gaps:
+      - "Response parsing relies on prompt discipline and manual JSON cleanup instead of a stricter structured-response contract."
+      - "The identification flow uses the camera sheet path; there is no separate photo-library-first onboarding flow here."
+      - "Model choice is hard-coded to gpt-4o-mini."
+    match_keywords: [plant identification, AI plant recommendation, vision onboarding, care recommendation, placement recommendation]
+
+  - id: plantcare.ai-features.ai-plant-assistant
+    project: PlantCare
+    subsystem: AI Features
+    name: AI plant assistant
+    capability: Answers plant-specific questions, optionally using a photo, and proposes structured profile or care-step changes for user review.
+    status: partial
+    approach: Builds plant-context prompts with optional conversation history and image payloads, then routes accepted structured suggestions back into the local plant model.
+    tech: [OpenAI Chat Completions API, URLSession, JSONEncoder, JSONDecoder, SwiftUI, PhotosUI]
+    io:
+      in: "Free-text questions, selected plant context, prior conversation turns, optional photo, OpenAI API key"
+      out: "Short AI answers and optional structured change suggestions awaiting approval"
+    code_refs:
+      - "PlantCare/Services/OpenAIService.swift"
+      - "PlantCare/Models/AIModels.swift"
+      - "PlantCare/Views/AIPlantQuestionView.swift"
+      - "PlantCare/Views/PlantChangeReviewView.swift"
+    known_gaps:
+      - "Photo attachment is only offered on the first message of a conversation."
+      - "Conversation length is capped in the UI at five exchanges."
+      - "Like other AI flows, parsing is brittle because it strips markdown and hunts for JSON in free-form model output."
+    match_keywords: [plant chat assistant, conversational plant care, multimodal Q and A, structured suggestions, AI copilot]
+
+  - id: plantcare.ai-features.ai-care-review
+    project: PlantCare
+    subsystem: AI Features
+    name: AI care review and health analysis
+    capability: Reviews the whole collection for care-setting improvements, analyzes recent photos for health feedback, and rewrites watering guidance.
+    status: partial
+    approach: Uses separate OpenAI prompt pipelines for collection-wide vibe checks, per-plant photo health checks, and watering-instruction rewrites, with results merged back into DataStore.
+    tech: [OpenAI Chat Completions API, URLSession, JSONEncoder, JSONDecoder, SwiftUI, Foundation]
+    io:
+      in: "Plant collection state, recent plant photos, accepted suggestion decisions, OpenAI API key"
+      out: "Revision suggestions, saved health feedback, and updated watering instructions"
+    code_refs:
+      - "PlantCare/Services/OpenAIService.swift"
+      - "PlantCare/Models/AIModels.swift"
+      - "PlantCare/Views/PlantCareVibeCheckView.swift"
+      - "PlantCare/Views/BatchHealthCheckView.swift"
+      - "PlantCare/Views/ForceHealthCheckView.swift"
+      - "PlantCare/Views/UpdateWateringInstructionsView.swift"
+      - "PlantCare/Views/SettingsView.swift"
+      - "PlantCare/Views/CareRoutineView.swift"
+    known_gaps:
+      - "Batch health checks are launched in an unrestricted task group even though the code comment says there should be a concurrency limit."
+      - "Health analysis only considers up to the three most recent photos per plant."
+      - "All AI review flows depend on one hard-coded model and prompt-only output control."
+    match_keywords: [care audit, health check, plant diagnostics, collection review, watering instruction optimization]
+
+  - id: plantcare.backup-sync.backup-archive
+    project: PlantCare
+    subsystem: Backup & Sync
+    name: Backup archive
+    capability: Creates, lists, restores, and deletes serialized app backups using iCloud when available and local storage as fallback.
+    status: partial
+    approach: Packages Codable backup payloads into a UIDocument-based archive format under an iCloud or documents-directory backup folder and exposes them through SwiftUI settings screens.
+    tech: [UIDocument, FileManager, iCloud Documents, os.Logger, SwiftUI, Foundation, UIKit]
+    io:
+      in: "Current DataStore state, backup and restore commands, iCloud availability"
+      out: "Backup files, backup inventory metadata, restored app state"
+    code_refs:
+      - "PlantCare/Services/BackupService.swift"
+      - "PlantCare/Services/PlantCareBackupDocument.swift"
+      - "PlantCare/Views/SettingsView.swift"
+      - "PlantCare/Store/DataStore.swift"
+      - "PlantCare/PlantCare.entitlements"
+    known_gaps:
+      - "Restore explicitly notes that photo-file restoration is not implemented beyond recreating the target directory."
+      - "The service can fall back to local storage, so this is backup/export rather than true multi-device sync."
+      - "Error handling is mostly logging plus user-facing failures; there is no backup integrity verification beyond opening the document."
+    match_keywords: [backup, restore, iCloud documents, local export, archive management]

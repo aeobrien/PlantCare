@@ -1,0 +1,24 @@
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/CareRoutineView.swift":
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.dia"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.swiftdeps"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.o"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.d"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/CareRoutineView.swiftconstvalues"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/BatchHealthCheckView.swift":
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.swiftdeps"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.o"
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/BatchHealthCheckView.d"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Services/OpenAIService.swift":
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.d"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.swiftconstvalues"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.dia"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.o"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/OpenAIService.swiftdeps"
+"/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/RoomsListView.swift":
+  dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.d"
+  object: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.o"
+  diagnostics: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.dia"
+  const-values: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.swiftconstvalues"
+  swift-dependencies: "/Users/aidan/Documents/XCode/PlantCare/build/Build/Intermediates.noindex/PlantCare.build/Debug-iphonesimulator/PlantCare.build/Objects-normal/arm64/RoomsListView.swiftdeps"

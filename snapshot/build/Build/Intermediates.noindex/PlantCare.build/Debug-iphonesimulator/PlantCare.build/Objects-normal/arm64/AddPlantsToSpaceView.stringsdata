@@ -1,0 +1,48 @@
+{
+  "source": "/Users/aidan/Documents/XCode/PlantCare/PlantCare/Views/AddPlantsToSpaceView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Search plants",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Plants to %@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "Move",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "(current)",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 146
+        }
+      }
+    ]
+  },
+  "version": 1
+}

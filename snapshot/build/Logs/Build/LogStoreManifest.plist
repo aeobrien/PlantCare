@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>logFormatVersion</key>
+	<integer>11</integer>
+	<key>logs</key>
+	<dict>
+		<key>1CDB301B-F1B0-4A9C-987C-1A92E5C3D24C</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>1CDB301B-F1B0-4A9C-987C-1A92E5C3D24C.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>0</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>PlantCare project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>PlantCare</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Cleaning project PlantCare with scheme PlantCare</string>
+			<key>timeStartedRecording</key>
+			<real>774981263.77184701</real>
+			<key>timeStoppedRecording</key>
+			<real>774981264.010741</real>
+			<key>title</key>
+			<string>Cleaning project PlantCare with scheme PlantCare</string>
+			<key>uniqueIdentifier</key>
+			<string>1CDB301B-F1B0-4A9C-987C-1A92E5C3D24C</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,2 @@
+Target dependency graph (1 target)
+Target 'PlantCare' in project 'PlantCare' (no dependencies)
